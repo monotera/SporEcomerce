@@ -1,23 +1,39 @@
-package com.sporecomerce.star;
+package com.sporecomerce.api.demo.star;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import com.sporecomerce.planet.Planet;
-import com.sporecomerce.spaceship.Spaceship;
+import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+
+import com.sporecomerce.api.demo.planet.Planet;
+import com.sporecomerce.api.demo.spaceship.Spaceship;
+
+@Entity
 public class Star {
 
-    private long star_id;
+    @Id
+    @GeneratedValue
+    private long id;
 
     private int x;
     private int y;
     private int z;
     private String name;
+    @Transient
     private HashMap<Integer, Double> nearStars = new HashMap<>();
     private Boolean isInHabited;
 
-    private ArrayList<Planet> planetList;
-    private ArrayList<Spaceship> spaceLobby;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "star")
+    private List<Spaceship> spaceLobby = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "star")
+    private List<Planet> planetList;
 
     public Star() {
 
@@ -31,8 +47,9 @@ public class Star {
         this.isInHabited = isInHabited;
     }
 
-    public Star(long star_id, int x, int y, int z, String name, HashMap<Integer,Double> nearStars, Boolean isInHabited, ArrayList<Planet> planetList, ArrayList<Spaceship> spaceLobby) {
-        this.star_id = star_id;
+    public Star(long id, int x, int y, int z, String name, HashMap<Integer, Double> nearStars, Boolean isInHabited,
+            ArrayList<Planet> planetList, ArrayList<Spaceship> spaceLobby) {
+        this.id = id;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -91,15 +108,15 @@ public class Star {
         this.isInHabited = isInHabited;
     }
 
-    public long getStar_id() {
-        return this.star_id;
+    public long getid() {
+        return this.id;
     }
 
-    public void setStar_id(long star_id) {
-        this.star_id = star_id;
+    public void setid(long id) {
+        this.id = id;
     }
 
-    public ArrayList<Planet> getPlanetList() {
+    public List<Planet> getPlanetList() {
         return this.planetList;
     }
 
@@ -107,7 +124,7 @@ public class Star {
         this.planetList = planetList;
     }
 
-    public ArrayList<Spaceship> getSpaceLobby() {
+    public List<Spaceship> getSpaceLobby() {
         return this.spaceLobby;
     }
 
@@ -117,17 +134,10 @@ public class Star {
 
     @Override
     public String toString() {
-        return "{" +
-            " star_id='" + getStar_id() + "'" +
-            ", x='" + getX() + "'" +
-            ", y='" + getY() + "'" +
-            ", z='" + getZ() + "'" +
-            ", name='" + getName() + "'" +
-            ", nearStars='" + getNearStars() + "'" +
-            ", isInHabited='" + getIsInHabited() + "'" +
-            ", planetList='" + getPlanetList() + "'" +
-            ", spaceLobby='" + getSpaceLobby() + "'" +
-            "}";
+        return "{" + " id='" + getid() + "'" + ", x='" + getX() + "'" + ", y='" + getY() + "'" + ", z='" + getZ() + "'"
+                + ", name='" + getName() + "'" + ", nearStars='" + getNearStars() + "'" + ", isInHabited='"
+                + getIsInHabited() + "'" + ", planetList='" + getPlanetList() + "'" + ", spaceLobby='" + getSpaceLobby()
+                + "'" + "}";
     }
 
 }

@@ -1,9 +1,24 @@
-package com.sporecomerce.product;
+package com.sporecomerce.api.demo.product;
 
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import com.sporecomerce.api.demo.crewmembers.Crewmembers;
+import com.sporecomerce.api.demo.planet.Planet;
+
+@Entity
 public class Product {
-    
-    private long product_id;
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
     private String product_name;
     private Integer stock;
     private double load_capacity;
@@ -16,12 +31,20 @@ public class Product {
     private double purchase_price;
     private boolean PP_;
 
+    @ManyToMany
+    @JoinTable(name = "productxcrew", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "crew_id"))
+    List<Crewmembers> crew = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(name = "productxplanet", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "planet_id"))
+    List<Planet> planets = new ArrayList<>();
 
     public Product() {
     }
 
-    public Product(long product_id, String product_name, Integer stock, double load_capacity, Integer demand, double sales_price, boolean SP_, Integer offer, double purchase_price, boolean PP_) {
-        this.product_id = product_id;
+    public Product(String product_name, Integer stock, double load_capacity, Integer demand, double sales_price,
+            boolean SP_, Integer offer, double purchase_price, boolean PP_) {
+
         this.product_name = product_name;
         this.stock = stock;
         this.load_capacity = load_capacity;
@@ -33,12 +56,12 @@ public class Product {
         this.PP_ = PP_;
     }
 
-    public long getProduct_id() {
-        return this.product_id;
+    public Long getProduct_id() {
+        return id;
     }
 
-    public void setProduct_id(long product_id) {
-        this.product_id = product_id;
+    public void setProduct_id(Long product_id) {
+        this.id = product_id;
     }
 
     public String getProduct_name() {
@@ -123,18 +146,11 @@ public class Product {
 
     @Override
     public String toString() {
-        return "{" +
-            " product_id='" + getProduct_id() + "'" +
-            ", product_name='" + getProduct_name() + "'" +
-            ", stock='" + getStock() + "'" +
-            ", load_capacity='" + getLoad_capacity() + "'" +
-            ", demand='" + getDemand() + "'" +
-            ", sales_price='" + getSales_price() + "'" +
-            ", SP_='" + isSP_() + "'" +
-            ", offer='" + getOffer() + "'" +
-            ", purchase_price='" + getPurchase_price() + "'" +
-            ", PP_='" + isPP_() + "'" +
-            "}";
+        return "{" + " product_id='" + getProduct_id() + "'" + ", product_name='" + getProduct_name() + "'"
+                + ", stock='" + getStock() + "'" + ", load_capacity='" + getLoad_capacity() + "'" + ", demand='"
+                + getDemand() + "'" + ", sales_price='" + getSales_price() + "'" + ", SP_='" + isSP_() + "'"
+                + ", offer='" + getOffer() + "'" + ", purchase_price='" + getPurchase_price() + "'" + ", PP_='"
+                + isPP_() + "'" + "}";
     }
 
 }

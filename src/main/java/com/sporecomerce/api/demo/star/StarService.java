@@ -1,4 +1,4 @@
-package com.sporecomerce.star;
+package com.sporecomerce.api.demo.star;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,11 +9,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class StarController {
+public class StarService {
     private ArrayList<Star> stars;
     private HashMap<Integer, Double> nearStars = new HashMap<>();
 
-    public StarController(ArrayList<Star> stars) {
+    public StarService(ArrayList<Star> stars) {
         this.stars = stars;
     }
 
