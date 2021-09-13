@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sporecomerce.api.demo.planet.Planet;
 import com.sporecomerce.api.demo.product.Product;
 
@@ -19,6 +20,7 @@ public class Productxplanet {
     @ManyToOne(cascade = CascadeType.ALL)
     private Product product;
     @ManyToOne(cascade = CascadeType.ALL)
+    @JsonBackReference
     private Planet planet;
 
     public Productxplanet() {

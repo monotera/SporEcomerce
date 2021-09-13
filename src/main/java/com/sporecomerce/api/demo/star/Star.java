@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sporecomerce.api.demo.planet.Planet;
 import com.sporecomerce.api.demo.spaceship.Spaceship;
 
@@ -30,9 +31,11 @@ public class Star {
     private Boolean isInHabited;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "star")
+    @JsonManagedReference
     private List<Spaceship> spaceLobby = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "star", orphanRemoval = true)
+    @OneToMany(mappedBy = "star")
+    @JsonManagedReference
     private List<Planet> planetList = new ArrayList<>();
 
     public Star() {
@@ -132,6 +135,14 @@ public class Star {
         this.spaceLobby = spaceLobby;
     }
 
+    public void setSpaceLobby(List<Spaceship> spaceLobby) {
+        this.spaceLobby = spaceLobby;
+    }
+
+    public void setPlanetList(List<Planet> planetList) {
+        this.planetList = planetList;
+    }
+
     public void addPlanet(Planet p) {
         planetList.add(p);
         p.setStar(this);
@@ -154,10 +165,9 @@ public class Star {
 
     @Override
     public String toString() {
-        return "{" + " id='" + getid() + "'" + ", x='" + getX() + "'" + ", y='" + getY() + "'" + ", z='" + getZ() + "'"
-                + ", name='" + getName() + "'" + ", nearStars='" + getNearStars() + "'" + ", isInHabited='"
-                + getIsInHabited() + "'" + ", planetList='" + getPlanetList() + "'" + ", spaceLobby='" + getSpaceLobby()
-                + "'" + "}";
+        return "Star [id=" + id + ", isInHabited=" + isInHabited + ", name=" + name + ", nearStars=" + nearStars
+                + ", planetList=" + planetList + ", spaceLobby=" + spaceLobby + ", x=" + x + ", y=" + y + ", z=" + z
+                + "]";
     }
 
 }

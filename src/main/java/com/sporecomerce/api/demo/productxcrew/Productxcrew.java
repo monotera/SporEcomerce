@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sporecomerce.api.demo.crewmembers.Crewmembers;
 import com.sporecomerce.api.demo.product.Product;
 
@@ -17,10 +18,11 @@ public class Productxcrew {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    private Product product = new Product();
+    private Product product;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    private Crewmembers crew = new Crewmembers();
+    @JsonIgnore
+    private Crewmembers crewmembers;
 
     public Productxcrew() {
     }
@@ -42,16 +44,24 @@ public class Productxcrew {
     }
 
     public Crewmembers getCrew() {
-        return crew;
+        return crewmembers;
     }
 
     public void setCrew(Crewmembers crew) {
-        this.crew = crew;
+        this.crewmembers = crew;
     }
 
     public Productxcrew(Product product, Crewmembers crew) {
         this.product = product;
-        this.crew = crew;
+        this.crewmembers = crew;
+    }
+
+    public Crewmembers getCrewmembers() {
+        return crewmembers;
+    }
+
+    public void setCrewmembers(Crewmembers crewmembers) {
+        this.crewmembers = crewmembers;
     }
 
 }

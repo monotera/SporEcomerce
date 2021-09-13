@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sporecomerce.api.demo.crewmembers.Crewmembers;
 
 @Entity
@@ -20,6 +21,7 @@ public class Player {
     private Role player_role;
 
     @ManyToOne
+    @JsonManagedReference
     private Crewmembers crewmembers;
 
     public Player() {

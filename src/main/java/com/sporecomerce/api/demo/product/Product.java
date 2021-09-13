@@ -1,17 +1,19 @@
 package com.sporecomerce.api.demo.product;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.JoinColumn;
-import com.sporecomerce.api.demo.crewmembers.Crewmembers;
-import com.sporecomerce.api.demo.planet.Planet;
+
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sporecomerce.api.demo.productxcrew.Productxcrew;
+import com.sporecomerce.api.demo.productxplanet.Productxplanet;
 
 @Entity
 public class Product {
@@ -32,13 +34,13 @@ public class Product {
     private double purchase_price;
     private boolean PP_;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "productxcrew", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "crew_id"))
-    List<Crewmembers> crew = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    @JsonIgnore
+    Set<Productxcrew> crew = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "productxplanet", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "planet_id"))
-    List<Planet> planets = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    @JsonBackReference
+    Set<Productxplanet> planets = new HashSet<>();
 
     public Product() {
     }
@@ -152,6 +154,22 @@ public class Product {
                 + getDemand() + "'" + ", sales_price='" + getSales_price() + "'" + ", SP_='" + isSP_() + "'"
                 + ", offer='" + getOffer() + "'" + ", purchase_price='" + getPurchase_price() + "'" + ", PP_='"
                 + isPP_() + "'" + "}";
+    }
+
+    public Set<Productxplanet> getPlanets() {
+        return planets;
+    }
+
+    public void setPlanets(Set<Productxplanet> planets) {
+        this.planets = planets;
+    }
+
+    public Set<Productxcrew> getCrew() {
+        return crew;
+    }
+
+    public void setCrew(Set<Productxcrew> crew) {
+        this.crew = crew;
     }
 
 }

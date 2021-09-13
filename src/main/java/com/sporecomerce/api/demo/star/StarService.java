@@ -9,14 +9,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
 public class StarService {
-    private ArrayList<Star> stars;
+    private ArrayList<Star> stars = new ArrayList<>();
     private HashMap<Integer, Double> nearStars = new HashMap<>();
 
     public StarService(ArrayList<Star> stars) {
         this.stars = stars;
     }
 
+    // ------------------------------------------------------------------------
     public void findNearStars(Star star) {
 
         if (!star.getNearStars().isEmpty())
@@ -79,6 +84,9 @@ public class StarService {
             temp.put(aa.getKey(), aa.getValue());
         }
         return temp;
+    }
+
+    public StarService() {
     }
 
 }

@@ -1,20 +1,24 @@
 package com.sporecomerce.api.demo.crewmembers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.sporecomerce.api.demo.player.Player;
 import com.sporecomerce.api.demo.product.Product;
+import com.sporecomerce.api.demo.productxcrew.Productxcrew;
 import com.sporecomerce.api.demo.spaceship.Spaceship;
 
 @Entity
@@ -32,13 +36,20 @@ public class Crewmembers {
     private Spaceship space_crew;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "crewmembers")
+    @JsonBackReference
     private List<Player> player_list = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "productxcrew", joinColumns = @JoinColumn(name = "crew_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private List<Product> products = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "crewmembers")
+    @JsonSerialize(using = CustomSerializer.class)
+    private Set<Productxcrew> products = new HashSet<>();
 
     public Crewmembers() {
+    }
+
+    public void addProduct(Product p) {
+        Productxcrew pxc = new Productxcrew(p, this);
+        products.add(pxc);
+        p.getCrew().add(pxc);
     }
 
     public Crewmembers(String crew_name, Integer accTime, double credits) {
@@ -48,7 +59,7 @@ public class Crewmembers {
     }
 
     public Crewmembers(long crew_id, String crew_name, Integer accTime, double credits, Spaceship space_crew,
-            ArrayList<Player> player_list, ArrayList<Product> products) {
+            ArrayList<Player> player_list, Set<Productxcrew> products) {
         this.id = crew_id;
         this.crew_name = crew_name;
         this.accTime = accTime;
@@ -127,11 +138,11 @@ public class Crewmembers {
         this.player_list = player_list;
     }
 
-    public List<Product> getProducts() {
-        return this.products;
+    public Set<Productxcrew> getProducts() {
+        return products;
     }
 
-    public void setproducts(ArrayList<Product> products) {
+    public void setProducts(Set<Productxcrew> products) {
         this.products = products;
     }
 

@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sporecomerce.api.demo.crewmembers.Crewmembers;
 import com.sporecomerce.api.demo.star.Star;
 
@@ -20,9 +21,11 @@ public class Spaceship {
     private double velocity;
 
     @OneToOne(mappedBy = "space_crew")
+    @JsonBackReference
     private Crewmembers crew;
 
     @ManyToOne
+    @JsonBackReference
     private Star star;
 
     public Spaceship() {

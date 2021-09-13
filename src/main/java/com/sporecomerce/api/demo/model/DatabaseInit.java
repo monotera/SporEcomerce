@@ -1,8 +1,5 @@
 package com.sporecomerce.api.demo.model;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import javax.transaction.Transactional;
 
 import com.sporecomerce.api.demo.crewmembers.Crewmembers;
@@ -14,9 +11,7 @@ import com.sporecomerce.api.demo.player.PlayerRepository;
 import com.sporecomerce.api.demo.player.Role;
 import com.sporecomerce.api.demo.product.Product;
 import com.sporecomerce.api.demo.product.ProductRepository;
-import com.sporecomerce.api.demo.productxcrew.Productxcrew;
 import com.sporecomerce.api.demo.productxcrew.ProductxcrewRepository;
-import com.sporecomerce.api.demo.productxplanet.Productxplanet;
 import com.sporecomerce.api.demo.productxplanet.ProductxplanetRepository;
 import com.sporecomerce.api.demo.spaceship.Spaceship;
 import com.sporecomerce.api.demo.spaceship.SpaceshipRepository;
@@ -27,24 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Component
 public class DatabaseInit implements ApplicationRunner {
-    /*
-     * private static final int NUM_PERSONS = 100; private static final int
-     * NUM_COMPANIES = 100; private static final int ROLES_PER_COMPANY = 3; private
-     * static final int EMPLOYEES_PER_ROLE_PER_COMPANY = 4;
-     * 
-     * /*
-     * 
-     * @Autowired CompanyRepository companyRepository;
-     * 
-     * @Autowired DivisionRepository divisionRepository;
-     * 
-     * @Autowired RoleRepository roleRepository;
-     */
 
     @Autowired
     StarRepository starRepository;
@@ -69,8 +49,6 @@ public class DatabaseInit implements ApplicationRunner {
 
     @Autowired
     ProductxplanetRepository productxplanetRepository;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseInit.class);
 
     @Override
     @Transactional
@@ -114,7 +92,7 @@ public class DatabaseInit implements ApplicationRunner {
 
         star1.addPlanet(p1);
         star1.addPlanet(p2);
-        star1.addPlanet(p3);
+        star2.addPlanet(p3);
         star2.addPlanet(p4);
 
         star1.addSpaceShip(sp1);
@@ -131,19 +109,25 @@ public class DatabaseInit implements ApplicationRunner {
         crewmembersRepository.save(c2);
         crewmembersRepository.save(c3);
 
-        productxcrewRepository.save(new Productxcrew(pr1, c1));
-        productxcrewRepository.save(new Productxcrew(pr1, c2));
-        productxcrewRepository.save(new Productxcrew(pr1, c3));
-        productxcrewRepository.save(new Productxcrew(pr2, c1));
-        productxcrewRepository.save(new Productxcrew(pr3, c1));
-        productxcrewRepository.save(new Productxcrew(pr4, c3));
-        productxcrewRepository.save(new Productxcrew(pr4, c2));
+        planetRepository.save(p1);
+        planetRepository.save(p2);
+        planetRepository.save(p3);
+        planetRepository.save(p4);
 
-        productxplanetRepository.save(new Productxplanet(pr1, p1));
-        productxplanetRepository.save(new Productxplanet(pr2, p1));
-        productxplanetRepository.save(new Productxplanet(pr3, p1));
-        productxplanetRepository.save(new Productxplanet(pr4, p2));
-        productxplanetRepository.save(new Productxplanet(pr1, p3));
+        p1.addProduct(pr1);
+        p1.addProduct(pr2);
+        p1.addProduct(pr3);
+        p2.addProduct(pr4);
+        p3.addProduct(pr1);
+        p2.addProduct(pr5);
+
+        c1.addProduct(pr1);
+        c2.addProduct(pr1);
+        c3.addProduct(pr1);
+        c1.addProduct(pr2);
+        c1.addProduct(pr3);
+        c3.addProduct(pr4);
+        c2.addProduct(pr4);
     }
 
 }
