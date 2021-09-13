@@ -1,5 +1,6 @@
 package com.sporecomerce.api.demo.productxplanet;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,9 +16,9 @@ public class Productxplanet {
     @GeneratedValue
     private long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Product product;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Planet planet;
 
     public Productxplanet() {
@@ -44,6 +45,11 @@ public class Productxplanet {
     }
 
     public void setPlanet(Planet planet) {
+        this.planet = planet;
+    }
+
+    public Productxplanet(Product product, Planet planet) {
+        this.product = product;
         this.planet = planet;
     }
 

@@ -3,6 +3,7 @@ package com.sporecomerce.api.demo.product;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -31,11 +32,11 @@ public class Product {
     private double purchase_price;
     private boolean PP_;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "productxcrew", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "crew_id"))
     List<Crewmembers> crew = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "productxplanet", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "planet_id"))
     List<Planet> planets = new ArrayList<>();
 

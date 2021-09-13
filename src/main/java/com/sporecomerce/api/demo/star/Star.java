@@ -32,8 +32,8 @@ public class Star {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "star")
     private List<Spaceship> spaceLobby = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "star")
-    private List<Planet> planetList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "star", orphanRemoval = true)
+    private List<Planet> planetList = new ArrayList<>();
 
     public Star() {
 
@@ -130,6 +130,26 @@ public class Star {
 
     public void setSpaceLobby(ArrayList<Spaceship> spaceLobby) {
         this.spaceLobby = spaceLobby;
+    }
+
+    public void addPlanet(Planet p) {
+        planetList.add(p);
+        p.setStar(this);
+    }
+
+    public void removePlanet(Planet p) {
+        planetList.remove(p);
+        p.setStar(null);
+    }
+
+    public void addSpaceShip(Spaceship s) {
+        spaceLobby.add(s);
+        s.setStar(this);
+    }
+
+    public void removeSpaceShip(Spaceship s) {
+        spaceLobby.remove(s);
+        s.setStar(null);
     }
 
     @Override

@@ -32,13 +32,19 @@ public class Crewmembers {
     private Spaceship space_crew;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "crewmembers")
-    private List<Player> player_list;
+    private List<Player> player_list = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "productxcrew", joinColumns = @JoinColumn(name = "crew_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
     private List<Product> products = new ArrayList<>();
 
     public Crewmembers() {
+    }
+
+    public Crewmembers(String crew_name, Integer accTime, double credits) {
+        this.crew_name = crew_name;
+        this.accTime = accTime;
+        this.credits = credits;
     }
 
     public Crewmembers(long crew_id, String crew_name, Integer accTime, double credits, Spaceship space_crew,
@@ -88,8 +94,29 @@ public class Crewmembers {
         return this.space_crew;
     }
 
-    public void setSpace_crew(Spaceship space_crew) {
-        this.space_crew = space_crew;
+    public boolean setSpace_crew(Spaceship space_crew) {
+
+        if (space_crew.getCrew() != null)
+            return false;
+        if (this.space_crew == null) {
+            this.space_crew = space_crew;
+            space_crew.setCrew(this);
+        } else {
+            this.space_crew.setCrew(null);
+            this.space_crew = space_crew;
+            space_crew.setCrew(this);
+        }
+        return true;
+    }
+
+    public void addPlayer(Player p) {
+        player_list.add(p);
+        p.setCrew_players(this);
+    }
+
+    public void removePlayer(Player p) {
+        player_list.remove(p);
+        p.setCrew_players(null);
     }
 
     public List<Player> getPlayer_list() {

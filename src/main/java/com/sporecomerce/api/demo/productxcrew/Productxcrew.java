@@ -1,5 +1,6 @@
 package com.sporecomerce.api.demo.productxcrew;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,11 +16,11 @@ public class Productxcrew {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
-    private Product product;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Product product = new Product();
 
-    @ManyToOne
-    private Crewmembers crew;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Crewmembers crew = new Crewmembers();
 
     public Productxcrew() {
     }
@@ -45,6 +46,11 @@ public class Productxcrew {
     }
 
     public void setCrew(Crewmembers crew) {
+        this.crew = crew;
+    }
+
+    public Productxcrew(Product product, Crewmembers crew) {
+        this.product = product;
         this.crew = crew;
     }
 
