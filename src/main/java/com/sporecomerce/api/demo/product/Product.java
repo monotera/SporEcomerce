@@ -1,6 +1,7 @@
 package com.sporecomerce.api.demo.product;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,6 +13,8 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sporecomerce.api.demo.crewmembers.Crewmembers;
+import com.sporecomerce.api.demo.planet.Planet;
 import com.sporecomerce.api.demo.productxcrew.Productxcrew;
 import com.sporecomerce.api.demo.productxplanet.Productxplanet;
 
@@ -155,4 +158,27 @@ public class Product {
         this.planets = planets;
     }
 
+    public void removePlanet(Planet p) {
+        for (Iterator<Productxplanet> iterator = planets.iterator(); iterator.hasNext();) {
+            Productxplanet pxp = iterator.next();
+            if (pxp.getProduct().equals(this) && pxp.getPlanet().equals(p)) {
+                iterator.remove();
+                pxp.getPlanet().getProduct_list().remove(pxp);
+                pxp.setProduct(null);
+                pxp.setPlanet(null);
+            }
+        }
+    }
+
+    public void removeCrewmember(Crewmembers c) {
+        for (Iterator<Productxcrew> iterator = crew.iterator(); iterator.hasNext();) {
+            Productxcrew pxp = iterator.next();
+            if (pxp.getProduct().equals(this) && pxp.getCrew().equals(c)) {
+                iterator.remove();
+                pxp.getCrew().getProducts().remove(pxp);
+                pxp.setCrew(null);
+                pxp.setProduct(null);
+            }
+        }
+    }
 }

@@ -125,7 +125,6 @@ public class DatabaseInit implements ApplicationRunner {
         c2.addProduct(pr1);
         c3.addProduct(pr1);
         c1.addProduct(pr2);
-        c1.addProduct(pr3);
         c3.addProduct(pr4);
         c2.addProduct(pr4);
     }

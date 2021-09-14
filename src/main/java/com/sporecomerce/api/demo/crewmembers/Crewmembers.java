@@ -32,9 +32,9 @@ public class Crewmembers {
     private Integer accTime;
     private double credits;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "spaceship_id", referencedColumnName = "id")
-    private Spaceship space_crew;
+    private Spaceship space_crew = new Spaceship();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "crewmembers")
     @JsonIgnore
@@ -122,7 +122,11 @@ public class Crewmembers {
         this.products = products;
     }
 
-    public boolean setSpace_crew(Spaceship space_crew) {
+    public void setSpace_crew(Spaceship space_crew) {
+        this.space_crew = space_crew;
+    }
+
+    public boolean changeSpace_crew(Spaceship space_crew) {
 
         if (space_crew.getCrew() != null)
             return false;
@@ -145,6 +149,12 @@ public class Crewmembers {
     public void removePlayer(Player p) {
         player_list.remove(p);
         p.setCrew_players(null);
+    }
+
+    @Override
+    public String toString() {
+        return "Crewmembers [accTime=" + accTime + ", credits=" + credits + ", crew_name=" + crew_name + ", id=" + id
+                + ", space_crew=" + space_crew + "]";
     }
 
 }

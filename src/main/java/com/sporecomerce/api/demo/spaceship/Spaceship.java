@@ -1,5 +1,6 @@
 package com.sporecomerce.api.demo.spaceship;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -84,6 +85,22 @@ public class Spaceship {
 
     public void setVelocity(double velocity) {
         this.velocity = velocity;
+    }
+
+    public void changeStar(Star newStar, Star oldStar) {
+        if (oldStar == null) {
+            this.star = newStar;
+            newStar.getSpaceLobby().add(this);
+        } else {
+            oldStar.getSpaceLobby().remove(this);
+            this.star = newStar;
+            newStar.getSpaceLobby().add(this);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Spaceship [ship_name=" + ship_name + "]";
     }
 
 }
