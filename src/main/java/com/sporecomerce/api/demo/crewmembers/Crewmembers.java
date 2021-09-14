@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.sporecomerce.api.demo.player.Player;
 import com.sporecomerce.api.demo.product.Product;
@@ -36,7 +37,7 @@ public class Crewmembers {
     private Spaceship space_crew;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "crewmembers")
-    @JsonBackReference
+    @JsonIgnore
     private List<Player> player_list = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "crewmembers")
@@ -69,16 +70,16 @@ public class Crewmembers {
         this.products = products;
     }
 
-    public long getCrew_id() {
-        return this.id;
+    public long getId() {
+        return id;
     }
 
-    public void setCrew_id(long crew_id) {
-        this.id = crew_id;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getCrew_name() {
-        return this.crew_name;
+        return crew_name;
     }
 
     public void setCrew_name(String crew_name) {
@@ -86,7 +87,7 @@ public class Crewmembers {
     }
 
     public Integer getAccTime() {
-        return this.accTime;
+        return accTime;
     }
 
     public void setAccTime(Integer accTime) {
@@ -94,7 +95,7 @@ public class Crewmembers {
     }
 
     public double getCredits() {
-        return this.credits;
+        return credits;
     }
 
     public void setCredits(double credits) {
@@ -102,7 +103,23 @@ public class Crewmembers {
     }
 
     public Spaceship getSpace_crew() {
-        return this.space_crew;
+        return space_crew;
+    }
+
+    public List<Player> getPlayer_list() {
+        return player_list;
+    }
+
+    public void setPlayer_list(List<Player> player_list) {
+        this.player_list = player_list;
+    }
+
+    public Set<Productxcrew> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Productxcrew> products) {
+        this.products = products;
     }
 
     public boolean setSpace_crew(Spaceship space_crew) {
@@ -128,22 +145,6 @@ public class Crewmembers {
     public void removePlayer(Player p) {
         player_list.remove(p);
         p.setCrew_players(null);
-    }
-
-    public List<Player> getPlayer_list() {
-        return this.player_list;
-    }
-
-    public void setPlayer_list(ArrayList<Player> player_list) {
-        this.player_list = player_list;
-    }
-
-    public Set<Productxcrew> getProducts() {
-        return products;
-    }
-
-    public void setProducts(Set<Productxcrew> products) {
-        this.products = products;
     }
 
 }

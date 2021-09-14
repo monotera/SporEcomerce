@@ -1,6 +1,7 @@
 package com.sporecomerce.api.demo.planet;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -26,12 +27,12 @@ public class Planet {
     private Long id;
     private String planet_name;
 
-    @JsonManagedReference
+    @JsonManagedReference(value = "planet-pxp")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "planet")
     private Set<Productxplanet> product_list = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonBackReference(value = "star-planet")
     private Star star;
 
     public Planet() {
@@ -41,37 +42,33 @@ public class Planet {
         this.planet_name = planet_name;
     }
 
-    public void addProduct(Product p) {
-        Productxplanet pxp = new Productxplanet(p, this);
-        product_list.add(pxp);
-        p.getPlanets().add(pxp);
-    }
-
     public Planet(String planet_name, Star star) {
         this.planet_name = planet_name;
         this.star = star;
     }
 
-    public Planet(String planet_name, List<Product> product_list, Star star) {
-        this.planet_name = planet_name;
-        // this.product_list = product_list;
-        this.star = star;
+    public Long getId() {
+        return id;
     }
 
-    public Long getid() {
-        return this.id;
-    }
-
-    public void setid(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     public String getPlanet_name() {
-        return this.planet_name;
+        return planet_name;
     }
 
     public void setPlanet_name(String planet_name) {
         this.planet_name = planet_name;
+    }
+
+    public Set<Productxplanet> getProduct_list() {
+        return product_list;
+    }
+
+    public void setProduct_list(Set<Productxplanet> product_list) {
+        this.product_list = product_list;
     }
 
     public Star getStar() {
@@ -82,12 +79,28 @@ public class Planet {
         this.star = star;
     }
 
-    public Set<Productxplanet> getProduct_list() {
-        return product_list;
+    public void addProduct(Product p) {
+        Productxplanet pxp = new Productxplanet(p, this);
+        product_list.add(pxp);
+        p.getPlanets().add(pxp);
     }
 
-    public void setProduct_list(Set<Productxplanet> product_list) {
-        this.product_list = product_list;
+    public void removeProduct(Product p) {
+        for (Iterator<Productxplanet> iterator = product_list.iterator(); iterator.hasNext();) {
+            Productxplanet pxp = iterator.next();
+            if (pxp.getPlanet().equals(this) && pxp.getProduct().equals(p)) {
+                iterator.remove();
+                pxp.getProduct().getPlanets().remove(pxp);
+                pxp.setPlanet(null);
+                pxp.setProduct(null);
+            }
+        }
+    }
+
+    public Planet(String planet_name, List<Product> product_list, Star star) {
+        this.planet_name = planet_name;
+        // this.product_list = product_list;
+        this.star = star;
     }
 
 }

@@ -39,7 +39,7 @@ public class Product {
     Set<Productxcrew> crew = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
-    @JsonBackReference
+    @JsonBackReference(value = "planet-pxp")
     Set<Productxplanet> planets = new HashSet<>();
 
     public Product() {
@@ -59,16 +59,16 @@ public class Product {
         this.PP_ = PP_;
     }
 
-    public Long getProduct_id() {
+    public Long getId() {
         return id;
     }
 
-    public void setProduct_id(Long product_id) {
-        this.id = product_id;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getProduct_name() {
-        return this.product_name;
+        return product_name;
     }
 
     public void setProduct_name(String product_name) {
@@ -76,7 +76,7 @@ public class Product {
     }
 
     public Integer getStock() {
-        return this.stock;
+        return stock;
     }
 
     public void setStock(Integer stock) {
@@ -84,7 +84,7 @@ public class Product {
     }
 
     public double getLoad_capacity() {
-        return this.load_capacity;
+        return load_capacity;
     }
 
     public void setLoad_capacity(double load_capacity) {
@@ -92,7 +92,7 @@ public class Product {
     }
 
     public Integer getDemand() {
-        return this.demand;
+        return demand;
     }
 
     public void setDemand(Integer demand) {
@@ -100,7 +100,7 @@ public class Product {
     }
 
     public double getSales_price() {
-        return this.sales_price;
+        return sales_price;
     }
 
     public void setSales_price(double sales_price) {
@@ -108,19 +108,15 @@ public class Product {
     }
 
     public boolean isSP_() {
-        return this.SP_;
+        return SP_;
     }
 
-    public boolean getSP_() {
-        return this.SP_;
-    }
-
-    public void setSP_(boolean SP_) {
-        this.SP_ = SP_;
+    public void setSP_(boolean sP_) {
+        SP_ = sP_;
     }
 
     public Integer getOffer() {
-        return this.offer;
+        return offer;
     }
 
     public void setOffer(Integer offer) {
@@ -128,7 +124,7 @@ public class Product {
     }
 
     public double getPurchase_price() {
-        return this.purchase_price;
+        return purchase_price;
     }
 
     public void setPurchase_price(double purchase_price) {
@@ -136,32 +132,11 @@ public class Product {
     }
 
     public boolean isPP_() {
-        return this.PP_;
+        return PP_;
     }
 
-    public boolean getPP_() {
-        return this.PP_;
-    }
-
-    public void setPP_(boolean PP_) {
-        this.PP_ = PP_;
-    }
-
-    @Override
-    public String toString() {
-        return "{" + " product_id='" + getProduct_id() + "'" + ", product_name='" + getProduct_name() + "'"
-                + ", stock='" + getStock() + "'" + ", load_capacity='" + getLoad_capacity() + "'" + ", demand='"
-                + getDemand() + "'" + ", sales_price='" + getSales_price() + "'" + ", SP_='" + isSP_() + "'"
-                + ", offer='" + getOffer() + "'" + ", purchase_price='" + getPurchase_price() + "'" + ", PP_='"
-                + isPP_() + "'" + "}";
-    }
-
-    public Set<Productxplanet> getPlanets() {
-        return planets;
-    }
-
-    public void setPlanets(Set<Productxplanet> planets) {
-        this.planets = planets;
+    public void setPP_(boolean pP_) {
+        PP_ = pP_;
     }
 
     public Set<Productxcrew> getCrew() {
@@ -170,6 +145,14 @@ public class Product {
 
     public void setCrew(Set<Productxcrew> crew) {
         this.crew = crew;
+    }
+
+    public Set<Productxplanet> getPlanets() {
+        return planets;
+    }
+
+    public void setPlanets(Set<Productxplanet> planets) {
+        this.planets = planets;
     }
 
 }

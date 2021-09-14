@@ -21,7 +21,6 @@ public class Player {
     private Role player_role;
 
     @ManyToOne
-    @JsonManagedReference
     private Crewmembers crewmembers;
 
     public Player() {
@@ -32,20 +31,28 @@ public class Player {
         this.player_role = player_role;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Crewmembers getCrewmembers() {
+        return crewmembers;
+    }
+
+    public void setCrewmembers(Crewmembers crewmembers) {
+        this.crewmembers = crewmembers;
+    }
+
     public Crewmembers getCrew_players() {
         return crewmembers;
     }
 
     public void setCrew_players(Crewmembers crew_players) {
         this.crewmembers = crew_players;
-    }
-
-    public Long getid() {
-        return this.id;
-    }
-
-    public void setid(Long id) {
-        this.id = id;
     }
 
     public String getPlayer_name() {
@@ -62,12 +69,6 @@ public class Player {
 
     public void setPlayer_role(Role player_role) {
         this.player_role = player_role;
-    }
-
-    @Override
-    public String toString() {
-        return "{" + " id='" + getid() + "'" + ", player_name='" + getPlayer_name() + "'" + ", player_role='"
-                + getPlayer_role() + "'" + "}";
     }
 
 }

@@ -25,7 +25,7 @@ public class Spaceship {
     private Crewmembers crew;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference(value = "star-spaceship")
     private Star star;
 
     public Spaceship() {
@@ -36,6 +36,14 @@ public class Spaceship {
         this.ship_name = ship_name;
         this.ship_load = ship_load;
         this.velocity = velocity;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Crewmembers getCrew() {
@@ -52,14 +60,6 @@ public class Spaceship {
 
     public void setStar(Star star) {
         this.star = star;
-    }
-
-    public long getid() {
-        return this.id;
-    }
-
-    public void setid(long id) {
-        this.id = id;
     }
 
     public String getShip_name() {
@@ -84,12 +84,6 @@ public class Spaceship {
 
     public void setVelocity(double velocity) {
         this.velocity = velocity;
-    }
-
-    @Override
-    public String toString() {
-        return "{" + " id='" + getid() + "'" + ", ship_name='" + getShip_name() + "'" + ", ship_load='" + getShip_load()
-                + "'" + ", velocity='" + getVelocity() + "'" + "}";
     }
 
 }

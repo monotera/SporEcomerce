@@ -20,7 +20,7 @@ public class Productxplanet {
     @ManyToOne(cascade = CascadeType.ALL)
     private Product product;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JsonBackReference
+    @JsonBackReference(value = "planet-pxp")
     private Planet planet;
 
     public Productxplanet() {

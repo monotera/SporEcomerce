@@ -31,11 +31,11 @@ public class Star {
     private Boolean isInHabited;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "star")
-    @JsonManagedReference
+    @JsonManagedReference(value = "star-spaceship")
     private List<Spaceship> spaceLobby = new ArrayList<>();
 
     @OneToMany(mappedBy = "star")
-    @JsonManagedReference
+    @JsonManagedReference(value = "star-planet")
     private List<Planet> planetList = new ArrayList<>();
 
     public Star() {
@@ -48,27 +48,6 @@ public class Star {
         this.z = z;
         this.name = name;
         this.isInHabited = isInHabited;
-    }
-
-    public Star(long id, int x, int y, int z, String name, HashMap<Integer, Double> nearStars, Boolean isInHabited,
-            ArrayList<Planet> planetList, ArrayList<Spaceship> spaceLobby) {
-        this.id = id;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.name = name;
-        this.nearStars = nearStars;
-        this.isInHabited = isInHabited;
-        this.planetList = planetList;
-        this.spaceLobby = spaceLobby;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public int getX() {
@@ -95,6 +74,14 @@ public class Star {
         this.z = z;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public HashMap<Integer, Double> getNearStars() {
         return nearStars;
     }
@@ -111,32 +98,16 @@ public class Star {
         this.isInHabited = isInHabited;
     }
 
-    public long getid() {
-        return this.id;
-    }
-
-    public void setid(long id) {
-        this.id = id;
-    }
-
-    public List<Planet> getPlanetList() {
-        return this.planetList;
-    }
-
-    public void setPlanetList(ArrayList<Planet> planetList) {
-        this.planetList = planetList;
-    }
-
     public List<Spaceship> getSpaceLobby() {
-        return this.spaceLobby;
-    }
-
-    public void setSpaceLobby(ArrayList<Spaceship> spaceLobby) {
-        this.spaceLobby = spaceLobby;
+        return spaceLobby;
     }
 
     public void setSpaceLobby(List<Spaceship> spaceLobby) {
         this.spaceLobby = spaceLobby;
+    }
+
+    public List<Planet> getPlanetList() {
+        return planetList;
     }
 
     public void setPlanetList(List<Planet> planetList) {
@@ -161,6 +132,14 @@ public class Star {
     public void removeSpaceShip(Spaceship s) {
         spaceLobby.remove(s);
         s.setStar(null);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     @Override
