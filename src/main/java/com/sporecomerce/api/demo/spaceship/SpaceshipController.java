@@ -2,6 +2,7 @@ package com.sporecomerce.api.demo.spaceship;
 
 import java.util.ArrayList;
 
+import com.sporecomerce.api.demo.product.Product;
 import com.sporecomerce.api.demo.star.Star;
 import com.sporecomerce.api.demo.star.StarRepository;
 
@@ -10,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 @RequestMapping("/spaceship")
 public class SpaceshipController {
 
@@ -30,6 +33,16 @@ public class SpaceshipController {
     StarRepository starRepository;
     Logger logger = LoggerFactory.getLogger(SpaceshipController.class);
 
+    @GetMapping("/view")
+    public String getMainPage(Model model) {
+        Iterable<Star> stars = starRepository.findAll();
+        Iterable<Spaceship> spaceships = spaceshipRepository.findAll();
+        model.addAttribute("stars", stars);
+        model.addAttribute("spaceships", spaceships);
+        return "spaceship";
+    }
+
+    // http://localhost:8080/spaceship/spaceships
     @GetMapping("/spaceships")
     public ResponseEntity<ArrayList<Spaceship>> getSpaceShips() {
         ArrayList<Spaceship> response = new ArrayList<>();
@@ -38,6 +51,7 @@ public class SpaceshipController {
         return new ResponseEntity<>(response, null, HttpStatus.OK);
     }
 
+    // http://localhost:8080/spaceship?spaceship_id=..
     @GetMapping("")
     public ResponseEntity<Spaceship> getSpaceship(@RequestParam Long spaceship_id) {
         try {
@@ -50,6 +64,7 @@ public class SpaceshipController {
         }
     }
 
+    // http://localhost:8080/spaceship?spaceship_id=..
     @PutMapping("")
     public ResponseEntity<Spaceship> modSpaceship(@RequestParam Long spaceship_id, @RequestBody Spaceship spaceship) {
         try {
@@ -59,7 +74,7 @@ public class SpaceshipController {
 
             spaceship.setId(oldSpaceship.getId());
             spaceship.setStar(oldSpaceship.getStar());
-            if (spaceship.getShip_name() == null)
+            if (spaceship.getShip_name() == null || spaceship.getShip_name() == "")
                 spaceship.setShip_name(oldSpaceship.getShip_name());
 
             if (spaceship.getShip_load() == 0.0)
@@ -74,6 +89,7 @@ public class SpaceshipController {
         }
     }
 
+    // http://localhost:8080/spaceship
     @PostMapping("")
     public ResponseEntity<Spaceship> createSpaceship(@RequestBody Spaceship spaceship) {
         try {
@@ -88,6 +104,7 @@ public class SpaceshipController {
         }
     }
 
+    // http://localhost:8080/spaceship/move_ship?spaceship_id=..&star_id=..
     @PutMapping("/move_ship")
     public ResponseEntity<Spaceship> moveSpaceship(@RequestParam Long spaceship_id, @RequestParam Long star_id) {
         try {
@@ -104,17 +121,21 @@ public class SpaceshipController {
         }
     }
 
+    // http://localhost:8080/spaceship?spaceship_id=..
     @DeleteMapping("")
     public ResponseEntity<Spaceship> deleteSpaceship(@RequestParam Long spaceship_id) {
         try {
             Spaceship spaceship = spaceshipRepository.findById(spaceship_id).get();
-            if (spaceship.equals(null))
+            if (spaceship == null)
                 return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
-            spaceship.getCrew().setSpace_crew(null);
-            spaceship.setCrew(null);
+            if (spaceship.getCrew() != null) {
+                spaceship.getCrew().setSpace_crew(null);
+                spaceship.setCrew(null);
+            }
             spaceshipRepository.delete(spaceship);
             return new ResponseEntity<>(spaceship, null, HttpStatus.OK);
         } catch (Exception e) {
+            logger.info(e.toString());
             return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
