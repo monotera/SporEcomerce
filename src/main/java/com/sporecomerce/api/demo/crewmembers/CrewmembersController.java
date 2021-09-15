@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 @RequestMapping(value = "/crew")
 public class CrewmembersController {
 
@@ -44,6 +46,15 @@ public class CrewmembersController {
     @Autowired
     PlayerRepository playerRepository;
     Logger logger = LoggerFactory.getLogger(CrewmembersController.class);
+
+    @GetMapping("/view")
+    public String getMainPage(Model model) {
+        Iterable<Crewmembers> crews = crewmembersRepository.findAll();
+        Iterable<Product> products = productRepository.findAll();
+        model.addAttribute("crews", crews);
+        model.addAttribute("products", products);
+        return "crew";
+    }
 
     @GetMapping("/crews")
     public ResponseEntity<ArrayList<Crewmembers>> getCrew() {
@@ -75,7 +86,7 @@ public class CrewmembersController {
             crew.setId(oldCrew.getId());
             crew.setSpace_crew(oldCrew.getSpace_crew());
             crew.setProducts(oldCrew.getProducts());
-            if (crew.getCrew_name() == null)
+            if (crew.getCrew_name() == null || crew.getCrew_name() == "")
                 crew.setCrew_name(oldCrew.getCrew_name());
             if (crew.getAccTime() == null)
                 crew.setAccTime(oldCrew.getAccTime());
@@ -150,7 +161,8 @@ public class CrewmembersController {
     @PostMapping("")
     public ResponseEntity<Crewmembers> createCrew(@RequestBody Crewmembers crew) {
         try {
-            if (crew.getCrew_name() == null || crew.getAccTime() == null || crew.getCredits() < 0.0)
+            if (crew.getCrew_name() == null || crew.getAccTime() == null || crew.getCredits() < 0.0
+                    || crew.getCrew_name() == "")
                 return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
             crew.setSpace_crew(null);
             crewmembersRepository.save(crew);
