@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 @RequestMapping("/product")
 public class ProductController {
     @Autowired
@@ -33,6 +35,13 @@ public class ProductController {
     @Autowired
     CrewmembersRepository crewmembersRepository;
     Logger logger = LoggerFactory.getLogger(ProductController.class);
+
+    @GetMapping("/view")
+    public String getMainPage(Model model) {
+        Iterable<Product> products = productRepository.findAll();
+        model.addAttribute("products", products);
+        return "product";
+    }
 
     // http://localhost:8080/product/products
     @GetMapping("/products")
@@ -71,7 +80,7 @@ public class ProductController {
                 return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
 
             product.setId(product_id);
-            if (product.getProduct_name() == null)
+            if (product.getProduct_name() == null || product.getProduct_name() == "")
                 product.setProduct_name(oldProduct.getProduct_name());
             if (product.getStock() == null)
                 product.setStock(oldProduct.getStock());
@@ -131,7 +140,7 @@ public class ProductController {
             if (product.getProduct_name() == null || product.getStock() == null || product.getLoad_capacity() == 0.0
                     || product.getDemand() == null || product.getSales_price() == 0.0 || product.getOffer() == null
                     || product.getPurchase_price() == 0.0)
-                return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(null, null, HttpStatus.CONFLICT);
             productRepository.save(product);
             return new ResponseEntity<>(product, null, HttpStatus.OK);
         } catch (Exception e) {
