@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sporecomerce.api.demo.crewmembers.Crewmembers;
 
 @Entity
@@ -45,14 +44,6 @@ public class Player {
 
     public void setCrewmembers(Crewmembers crewmembers) {
         this.crewmembers = crewmembers;
-    }
-
-    public Crewmembers getCrew_players() {
-        return crewmembers;
-    }
-
-    public void setCrew_players(Crewmembers crew_players) {
-        this.crewmembers = crew_players;
     }
 
     public String getPlayer_name() {

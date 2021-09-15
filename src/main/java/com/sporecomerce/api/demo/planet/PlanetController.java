@@ -51,8 +51,8 @@ public class PlanetController {
         }
     }
 
-    // http://localhost:8080/planet/product?planet_id=15&product_id=35
-    @PutMapping("/product")
+    // http://localhost:8080/planet/add-product?planet_id=15&product_id=35
+    @PutMapping("/add-product")
     public ResponseEntity<Planet> addProduct(@RequestParam Long planet_id, @RequestParam Long product_id) {
         try {
             Boolean validation = true;
@@ -80,6 +80,8 @@ public class PlanetController {
         try {
             Planet planet = planetRepository.findById(planet_id).get();
             Product product = productRepository.findById(product_id).get();
+            if (planet == null || product == null)
+                return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
             planet.removeProduct(product);
             planetRepository.save(planet);
             return new ResponseEntity<>(planet, null, HttpStatus.OK);

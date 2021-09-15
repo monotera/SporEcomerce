@@ -2,7 +2,6 @@ package com.sporecomerce.api.demo.spaceship;
 
 import java.util.ArrayList;
 
-import com.sporecomerce.api.demo.crewmembers.Crewmembers;
 import com.sporecomerce.api.demo.star.Star;
 import com.sporecomerce.api.demo.star.StarRepository;
 
@@ -116,15 +115,7 @@ public class SpaceshipController {
             spaceshipRepository.delete(spaceship);
             return new ResponseEntity<>(spaceship, null, HttpStatus.OK);
         } catch (Exception e) {
-            logger.error("Ee", e);
             return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
-
-/**
- * public ResponseEntity<Spaceship> getSpaceship(@RequestParam Long
- * spaceship_id) { try { return new ResponseEntity<>(spaceship, null,
- * HttpStatus.OK); } catch (Exception e) { return new ResponseEntity<>(null,
- * null, HttpStatus.INTERNAL_SERVER_ERROR); } }
- */

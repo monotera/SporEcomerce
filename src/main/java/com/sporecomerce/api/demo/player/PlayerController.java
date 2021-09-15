@@ -2,11 +2,19 @@ package com.sporecomerce.api.demo.player;
 
 import java.util.ArrayList;
 
+import com.sporecomerce.api.demo.crewmembers.Crewmembers;
+import com.sporecomerce.api.demo.crewmembers.CrewmembersRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -16,11 +24,86 @@ public class PlayerController {
     @Autowired
     PlayerRepository playerRepository;
 
+    @Autowired
+    CrewmembersRepository crewmembersRepository;
+
     @GetMapping("/players")
     public ResponseEntity<ArrayList<Player>> getPLayers() {
         ArrayList<Player> response = new ArrayList<>();
         Iterable<Player> db = playerRepository.findAll();
         db.forEach(response::add);
         return new ResponseEntity<>(response, null, HttpStatus.OK);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<Player> getPlayer(@RequestParam Long player_id) {
+        try {
+            Player player = playerRepository.findById(player_id).get();
+            if (player == null)
+                return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(player, null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("")
+    public ResponseEntity<Player> modPlayer(@RequestParam Long player_id, @RequestBody Player newPlayer) {
+        try {
+            Player player = playerRepository.findById(player_id).get();
+            if (player == null)
+                return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
+            newPlayer.setId(player.getId());
+            newPlayer.setCrewmembers(player.getCrewmembers());
+            if (newPlayer.getPlayer_name() == null)
+                newPlayer.setPlayer_name(player.getPlayer_name());
+            if (newPlayer.getPlayer_role() == null)
+                newPlayer.setPlayer_role(player.getPlayer_role());
+            playerRepository.save(newPlayer);
+            return new ResponseEntity<>(newPlayer, null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/change_crew")
+    public ResponseEntity<Player> changeCrew(@RequestParam Long player_id, @RequestParam Long crew_id) {
+        try {
+            Player player = playerRepository.findById(player_id).get();
+            Crewmembers crewmembers = crewmembersRepository.findById(crew_id).get();
+            if (player == null || crewmembers == null)
+                return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
+            player.getCrewmembers().getPlayer_list().remove(player);
+            crewmembers.addPlayer(player);
+            playerRepository.save(player);
+            return new ResponseEntity<>(player, null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("")
+    public ResponseEntity<Player> createPlayer(@RequestBody Player player) {
+        try {
+            if (player.getPlayer_name() == null || player.getPlayer_role() == null)
+                return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
+            playerRepository.save(player);
+            return new ResponseEntity<>(player, null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("")
+    public ResponseEntity<Player> deletePlayer(@RequestParam Long player_id) {
+        try {
+            Player player = playerRepository.findById(player_id).get();
+            if (player == null)
+                return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
+            playerRepository.delete(player);
+            return new ResponseEntity<>(player, null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

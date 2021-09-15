@@ -1,7 +1,6 @@
 package com.sporecomerce.api.demo.star;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 import com.sporecomerce.api.demo.planet.Planet;
 import com.sporecomerce.api.demo.planet.PlanetRepository;
@@ -13,8 +12,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +24,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+import antlr.collections.List;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Controller
 @RequestMapping(value = "/star")
 public class StarController {
     @Autowired
@@ -36,8 +43,19 @@ public class StarController {
 
     Logger logger = LoggerFactory.getLogger(StarController.class);
 
+    @GetMapping("")
+    public String getMainPage(Model model) {
+        Iterable<Star> stars = starRepository.findAll();
+        Iterable<Planet> planets = planetRepository.findAll();
+        Iterable<Spaceship> spaceships = spaceshipRepository.findAll();
+        model.addAttribute("stars", stars);
+        model.addAttribute("planets", planets);
+        model.addAttribute("spaceships", spaceships);
+        return "star-main";
+    }
+
     // http://localhost:8080/star/stars
-    @GetMapping("/stars")
+    @GetMapping(value = "/stars")
     public ResponseEntity<ArrayList<Star>> getStars() {
         ArrayList<Star> response = new ArrayList<>();
         Iterable<Star> starsI = starRepository.findAll();
@@ -45,23 +63,24 @@ public class StarController {
         return new ResponseEntity<>(response, null, HttpStatus.OK);
     }
 
-    // http://localhost:8080/star?star_id=...
-    @GetMapping("")
-    public ResponseEntity<Star> getStar(@RequestParam Long star_id) {
+    // http://localhost:8080/star/find?id=...
+    @GetMapping("/find")
+    public ResponseEntity<Star> getStar(@RequestParam Long id) {
         try {
-            Star star = starRepository.findById(star_id).get();
+            Star star = starRepository.findById(id).get();
+            if (star == null)
+                return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
             return new ResponseEntity<>(star, null, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
-    // localhost:8080/star/newStar
+    // localhost:8080/star
     /*
      * { "x": 12, "y": 12, "z": 15, "name": "new Starx", "isInHabited": false }
      */
-    @PostMapping("/newStar")
+    @PostMapping("")
     public ResponseEntity<Star> createStar(@RequestBody Star star) {
         try {
             // TODO:Check if posistions are valid
@@ -81,10 +100,11 @@ public class StarController {
         try {
             Planet planet = planetRepository.findById(planet_id).get();
             Star star = starRepository.findById(star_id).get();
-            star.addPlanet(planet);
-            starRepository.save(star);
+            if (star.addPlanet(planet))
+                starRepository.save(star);
             return new ResponseEntity<>(star, null, HttpStatus.OK);
         } catch (Exception e) {
+            logger.info(e.toString());
             return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -95,9 +115,8 @@ public class StarController {
         try {
             Star star = starRepository.findById(star_id).get();
             Planet planet = planetRepository.findById(planet_id).get();
-            star.getPlanetList().remove(planet);
-            planet.setStar(null);
-            starRepository.save(star);
+            if (star.removePlanet(planet))
+                starRepository.save(star);
             return new ResponseEntity<>(star, null, HttpStatus.OK);
         } catch (Exception e) {
             logger.info(e.toString());
@@ -147,6 +166,12 @@ public class StarController {
                 star.setName(oldStar.getName());
             if (star.getIsInHabited() == null)
                 star.setIsInHabited(oldStar.getIsInHabited());
+            if (star.getX() == -1)
+                star.setX(oldStar.getX());
+            if (star.getY() == -1)
+                star.setY(oldStar.getY());
+            if (star.getZ() == -1)
+                star.setZ(oldStar.getZ());
             // TODO: check positions if its valid
             starRepository.save(star);
             return new ResponseEntity<>(star, null, HttpStatus.OK);

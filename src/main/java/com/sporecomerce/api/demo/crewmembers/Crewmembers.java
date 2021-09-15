@@ -2,6 +2,7 @@ package com.sporecomerce.api.demo.crewmembers;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -14,7 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.sporecomerce.api.demo.player.Player;
@@ -45,12 +45,6 @@ public class Crewmembers {
     private Set<Productxcrew> products = new HashSet<>();
 
     public Crewmembers() {
-    }
-
-    public void addProduct(Product p) {
-        Productxcrew pxc = new Productxcrew(p, this);
-        products.add(pxc);
-        p.getCrew().add(pxc);
     }
 
     public Crewmembers(String crew_name, Integer accTime, double credits) {
@@ -143,12 +137,30 @@ public class Crewmembers {
 
     public void addPlayer(Player p) {
         player_list.add(p);
-        p.setCrew_players(this);
+        p.setCrewmembers(this);
     }
 
     public void removePlayer(Player p) {
         player_list.remove(p);
-        p.setCrew_players(null);
+        p.setCrewmembers(null);
+    }
+
+    public void addProduct(Product p) {
+        Productxcrew pxc = new Productxcrew(p, this);
+        products.add(pxc);
+        p.getCrew().add(pxc);
+    }
+
+    public void removeProduct(Product p) {
+        for (Iterator<Productxcrew> iterator = products.iterator(); iterator.hasNext();) {
+            Productxcrew pxc = iterator.next();
+            if (pxc.getCrew().equals(this) && pxc.getProduct().equals(p)) {
+                iterator.remove();
+                pxc.getProduct().getCrew().remove(pxc);
+                pxc.setCrew(null);
+                pxc.setProduct(null);
+            }
+        }
     }
 
     @Override

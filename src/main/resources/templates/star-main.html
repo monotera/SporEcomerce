@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+</head>
+
+<body>
+    <h1>Star Controller</h1>
+    <h2>Get All Stars</h2>
+    <form action="http://localhost:8080/star/stars" method="GET">
+        <button type="submit">Continue!</button>
+    </form>
+
+    <h2>Create a star</h2>
+    <form>
+        <label for="star_name">Star name</label>
+        <input id="star_name" name="star_name" type="text" /><br />
+        <label for="positionx">Position x</label>
+        <input id="positionx" name="positionx" type="text" /><br />
+        <label for="positiony">Position y</label>
+        <input id="positiony" name="positiony" type="text" /><br />
+        <label for="positionz">Position z</label>
+        <input id="positionz" name="positionz" type="text" /><br />
+        <label for="isInhabited">is inhabited?</label></label>
+        <select name="isInhabited" id="isInhabited"><br />
+            <option value="true">true</option>
+            <option value="false">false</option>
+        </select>
+        <button type="button" th:onClick="createStar()">Continue!</button>
+    </form>
+
+    <h2>Select the star you want to operate</h2>
+    <form action="http://localhost:8080/star/find">
+        <label for="id">Select a star</label>
+        <select name="id" id="id">
+            <option th:each="star : ${stars}" th:value="${star.id}" th:text="${star.name}">test</option>
+        </select>
+        <button type="submit">Get this star info!</button>
+    </form>
+
+
+    <h2>Add a planet</h2>
+    <p>NOTE: if the method is successful, it will return the updated star. If the star already has that planet, then an
+        error
+        will be
+        returned</p>
+    <form>
+
+        <label for="planet_id">Select a planet</label>
+        <select name="planet_id" id="planet_id">
+            <option th:each="planet : ${planets}" th:value="${planet.id}" th:text="${planet.planet_name}">test</option>
+        </select>
+        <button type="button" th:with="type = @{planet}, selector=@{planet_id}, att=@{planet_id}"
+            th:onclick="put_method([[${type}]],[[${selector}]],[[${att}]])">Continue!</button>
+    </form>
+
+    <h2>Remove a planet</h2>
+    <p>NOTE: if the method is successful, it will return the updated star. </p>
+    <form>
+
+        <label for="planet_id_remove">Select a planet</label>
+        <select name="planet_id_remove" id="planet_id_remove">
+            <option th:each="planet : ${planets}" th:value="${planet.id}" th:text="${planet.planet_name}">test</option>
+        </select>
+        <button type="button" th:with="type = @{remove_planet}, selector=@{planet_id_remove}, att=@{planet_id}"
+            th:onclick="put_method([[${type}]],[[${selector}]],[[${att}]])">Continue!</button>
+    </form>
+
+    <h2>Add a spaceship</h2>
+    <p>NOTE: if the method is successful, it will return the updated star.</p>
+    <form>
+
+        <label for="spaceship_id">Select a spaceship</label>
+        <select name="spaceship_id" id="spaceship_id">
+            <option th:each="spaceship : ${spaceships}" th:value="${spaceship.id}" th:text="${spaceship.ship_name}">test
+            </option>
+        </select>
+        <button type="button" th:with="type = @{spaceship}, selector=@{spaceship_id}, att=@{spaceship_id}"
+            th:onclick="put_method([[${type}]],[[${selector}]],[[${att}]])">Continue!</button>
+    </form>
+
+    <h2>Remove a spaceship</h2>
+    <p>NOTE: if the method is successful, it will return the updated star.</p>
+    <form>
+        <label for="spaceship_id_remove">Select a spaceship</label>
+        <select name="spaceship_id_remove" id="spaceship_id_remove">
+            <option th:each="spaceship : ${spaceships}" th:value="${spaceship.id}" th:text="${spaceship.ship_name}">test
+            </option>
+        </select>
+        <button type="button" th:with="type = @{remove_spaceship}, selector=@{spaceship_id_remove}, att=@{spaceship_id}"
+            th:onclick="put_method([[${type}]],[[${selector}]],[[${att}]])">Continue!</button>
+    </form>
+
+    <h2>Update a star</h2>
+    <form>
+        <label for="up_star_name">Star name</label>
+        <input id="up_star_name" name="up_star_name" type="text" /><br />
+        <label for="up_positionx">Position x</label>
+        <input id="up_positionx" name="up_positionx" type="text" /><br />
+        <label for="up_positiony">Position y</label>
+        <input id="up_positiony" name="up_positiony" type="text" /><br />
+        <label for="up_positionz">Position z</label>
+        <input id="up_positionz" name="up_positionz" type="text" /><br />
+        <label for="up_isInhabited">is inhabited?</label></label>
+        <select name="up_isInhabited" id="up_isInhabited"><br />
+            <option value="true">true</option>
+            <option value="false">false</option>
+        </select>
+        <button type="button" th:onClick="updateStar()">Continue!</button>
+    </form>
+
+    <h2>Delete star</h2>
+    <p>NOTE: f the method is successful, it will return the deleted star.</p>
+    <form>
+        <button type="button" th:onClick="deleteStar()">Continue!</button>
+    </form>
+
+    <h2>Response</h2>
+    <p id="response"></p>
+
+
+
+
+    <script th:inline="javascript">
+        //http://localhost:8080/star?star_id=5
+        const fetch_put_method = async (url) => {
+            const response = await fetch(url, { method: "PUT" });
+            return response.json();
+        }
+        const put_method = (type, selector, att) => {
+            let star_id = document.querySelector("#id");
+            let p = document.querySelector("#response");
+            star_id = star_id.options[star_id.selectedIndex];
+            let planet_id = document.querySelector(`#${selector}`);
+            planet_id = planet_id.options[planet_id.selectedIndex];
+            let url = `http://localhost:8080/star/${type}?star_id=${star_id.value}&${att}=${planet_id.value}`
+            fetch_put_method(url).then(newStar => {
+                p.innerHTML = ''
+                p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(newStar)}`
+            });
+        }
+
+        const fetch_update_star_method = async (url, name, posx, posy, posz, isInhabited) => {
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    x: posx,
+                    y: posy,
+                    z: posz,
+                    isInHabited: isInhabited
+                })
+            });
+            return response.json();
+        }
+        const fetch_delete_method = async (url) => {
+            let response = await fetch(url, { method: "delete" });
+            return response.json();
+        }
+        const deleteStar = () => {
+            let star_id = document.querySelector("#id");
+            star_id = star_id.options[star_id.selectedIndex];
+            let url = `http://localhost:8080/star?star_id=${star_id.value}`
+            let p = document.querySelector("#response");
+            fetch_delete_method(url).then(deletedStar => {
+                p.innerHTML = ''
+                p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(deletedStar)}`
+                location.reload();
+            });
+        }
+
+        const fetch_create_method = async (url, name, posx, posy, posz, isInhabited) => {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    x: posx,
+                    y: posy,
+                    z: posz,
+                    isInHabited: isInhabited
+                })
+            });
+            return response.json();
+        }
+
+        const createStar = () => {
+            let url = "http://localhost:8080/star"
+            let name = document.querySelector("#star_name").value;
+            let posx = document.querySelector("#positionx").value;
+            let posy = document.querySelector("#positiony").value;
+            let posz = document.querySelector("#positionz").value;
+            let isInhabited = document.querySelector("#isInhabited");
+            isInhabited = isInhabited.options[isInhabited.selectedIndex];
+            let p = document.querySelector("#response");
+            fetch_create_method(url, name, posx, posy, posz, isInhabited.value).then(newStar => {
+                p.innerHTML = ''
+                p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(newStar)}`
+                location.reload();
+            })
+        }
+        const updateStar = () => {
+            let star_id = document.querySelector("#id");
+            star_id = star_id.options[star_id.selectedIndex];
+            let url = `http://localhost:8080/star?star_id=${star_id.value}`
+            let name = document.querySelector("#up_star_name").value;
+            let posx = document.querySelector("#up_positionx").value;
+            if (posx == "")
+                posx = -1
+            let posy = document.querySelector("#up_positiony").value;
+            if (posy == "")
+                posy = -1
+            let posz = document.querySelector("#up_positionz").value;
+            if (posz == "")
+                posz = -1
+            let isInhabited = document.querySelector("#up_isInhabited");
+            isInhabited = isInhabited.options[isInhabited.selectedIndex];
+            let p = document.querySelector("#response");
+            fetch_update_star_method(url, name, posx, posy, posz, isInhabited.value).then(newStar => {
+                p.innerHTML = ''
+                p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(newStar)}`
+            })
+        }
+
+    </script>
+</body>
+
+</html>

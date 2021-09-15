@@ -114,19 +114,29 @@ public class Star {
         this.planetList = planetList;
     }
 
-    public void addPlanet(Planet p) {
-        planetList.add(p);
-        p.setStar(this);
+    public boolean addPlanet(Planet p) {
+        if (!planetList.contains(p)) {
+            planetList.add(p);
+            p.setStar(this);
+            return true;
+        }
+        return false;
     }
 
-    public void removePlanet(Planet p) {
-        planetList.remove(p);
-        p.setStar(null);
+    public boolean removePlanet(Planet p) {
+        if (planetList.contains(p)) {
+            planetList.remove(p);
+            p.setStar(null);
+            return true;
+        }
+        return false;
     }
 
     public void addSpaceShip(Spaceship s) {
-        spaceLobby.add(s);
-        s.setStar(this);
+        if (!spaceLobby.contains(s)) {
+            spaceLobby.add(s);
+            s.setStar(this);
+        }
     }
 
     public void removeSpaceShip(Spaceship s) {
