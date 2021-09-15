@@ -7,9 +7,13 @@ import com.sporecomerce.api.demo.product.ProductRepository;
 import com.sporecomerce.api.demo.productxplanet.Productxplanet;
 import com.sporecomerce.api.demo.productxplanet.ProductxplanetRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 @RequestMapping(value = "/planet")
 public class PlanetController {
     @Autowired
@@ -30,6 +34,16 @@ public class PlanetController {
 
     @Autowired
     ProductxplanetRepository productxplanetRepository;
+    Logger logger = LoggerFactory.getLogger(PlanetController.class);
+
+    @GetMapping("/view")
+    public String getMainPage(Model model) {
+        Iterable<Planet> planets = planetRepository.findAll();
+        Iterable<Product> products = productRepository.findAll();
+        model.addAttribute("planets", planets);
+        model.addAttribute("products", products);
+        return "planet";
+    }
 
     // http://localhost:8080/planet/planets
     @GetMapping("/planets")
@@ -58,9 +72,10 @@ public class PlanetController {
             Boolean validation = true;
             Iterable<Productxplanet> pxp = productxplanetRepository.findAll();
             for (Productxplanet productxplanet : pxp) {
-                if (productxplanet.getPlanet().getId() == planet_id
-                        && productxplanet.getProduct().getId() == product_id)
-                    validation = false;
+                if (productxplanet.getPlanet() != null && productxplanet.getProduct() != null)
+                    if (productxplanet.getPlanet().getId() == planet_id
+                            && productxplanet.getProduct().getId() == product_id)
+                        validation = false;
             }
             if (!validation)
                 return new ResponseEntity<>(null, null, HttpStatus.CONFLICT);
@@ -70,12 +85,13 @@ public class PlanetController {
             planetRepository.save(planet);
             return new ResponseEntity<>(planet, null, HttpStatus.OK);
         } catch (Exception e) {
+            logger.info(e.toString());
             return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    // http://localhost:8080/planet/remove_product?planet_id=15&product_id=35
-    @PutMapping("/remove_product")
+    // http://localhost:8080/planet/remove-product?planet_id=15&product_id=35
+    @PutMapping("/remove-product")
     public ResponseEntity<Planet> removeProduct(@RequestParam Long planet_id, @RequestParam Long product_id) {
         try {
             Planet planet = planetRepository.findById(planet_id).get();
@@ -96,7 +112,7 @@ public class PlanetController {
     public ResponseEntity<Planet> modifyPlanet(@RequestBody Planet planet, @RequestParam Long planet_id) {
         try {
             Planet old_planet = planetRepository.findById(planet_id).get();
-            if (planet.getPlanet_name() == null)
+            if (planet.getPlanet_name() == null || planet.getPlanet_name() == "")
                 planet.setPlanet_name(old_planet.getPlanet_name());
             planet.setId(old_planet.getId());
             planet.setStar(old_planet.getStar());
@@ -113,8 +129,8 @@ public class PlanetController {
     @PostMapping("")
     public ResponseEntity<Planet> createPlanet(@RequestBody Planet planet) {
         try {
-            if (planet.getPlanet_name() == null)
-                return new ResponseEntity<>(null, null, HttpStatus.NO_CONTENT);
+            if (planet.getPlanet_name() == null || planet.getPlanet_name() == "")
+                return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
             planetRepository.save(planet);
             return new ResponseEntity<>(planet, null, HttpStatus.OK);
         } catch (Exception e) {
