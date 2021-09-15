@@ -2,7 +2,6 @@ package com.sporecomerce.api.demo.spaceship;
 
 import java.util.ArrayList;
 
-import com.sporecomerce.api.demo.product.Product;
 import com.sporecomerce.api.demo.star.Star;
 import com.sporecomerce.api.demo.star.StarRepository;
 
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 @RequestMapping("/spaceship")

@@ -8,6 +8,8 @@ import com.sporecomerce.api.demo.crewmembers.CrewmembersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,9 +17,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 @RequestMapping("/player")
 public class PlayerController {
 
@@ -26,6 +27,15 @@ public class PlayerController {
 
     @Autowired
     CrewmembersRepository crewmembersRepository;
+
+    @GetMapping("/view")
+    public String getMainPage(Model model) {
+        Iterable<Player> players = playerRepository.findAll();
+        Iterable<Crewmembers> crews = crewmembersRepository.findAll();
+        model.addAttribute("players", players);
+        model.addAttribute("crews", crews);
+        return "player";
+    }
 
     @GetMapping("/players")
     public ResponseEntity<ArrayList<Player>> getPLayers() {
@@ -55,7 +65,7 @@ public class PlayerController {
                 return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
             newPlayer.setId(player.getId());
             newPlayer.setCrewmembers(player.getCrewmembers());
-            if (newPlayer.getPlayer_name() == null)
+            if (newPlayer.getPlayer_name() == null || newPlayer.getPlayer_name() == "")
                 newPlayer.setPlayer_name(player.getPlayer_name());
             if (newPlayer.getPlayer_role() == null)
                 newPlayer.setPlayer_role(player.getPlayer_role());
