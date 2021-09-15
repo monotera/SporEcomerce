@@ -43,7 +43,7 @@ public class StarController {
 
     Logger logger = LoggerFactory.getLogger(StarController.class);
 
-    @GetMapping("")
+    @GetMapping("/view")
     public String getMainPage(Model model) {
         Iterable<Star> stars = starRepository.findAll();
         Iterable<Planet> planets = planetRepository.findAll();
@@ -51,7 +51,7 @@ public class StarController {
         model.addAttribute("stars", stars);
         model.addAttribute("planets", planets);
         model.addAttribute("spaceships", spaceships);
-        return "star-main";
+        return "star";
     }
 
     // http://localhost:8080/star/stars
@@ -63,8 +63,8 @@ public class StarController {
         return new ResponseEntity<>(response, null, HttpStatus.OK);
     }
 
-    // http://localhost:8080/star/find?id=...
-    @GetMapping("/find")
+    // http://localhost:8080/star?id=...
+    @GetMapping("")
     public ResponseEntity<Star> getStar(@RequestParam Long id) {
         try {
             Star star = starRepository.findById(id).get();
