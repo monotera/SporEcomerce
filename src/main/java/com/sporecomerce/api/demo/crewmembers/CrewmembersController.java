@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 @RequestMapping(value = "/crew")
@@ -51,8 +50,10 @@ public class CrewmembersController {
     public String getMainPage(Model model) {
         Iterable<Crewmembers> crews = crewmembersRepository.findAll();
         Iterable<Product> products = productRepository.findAll();
+        Iterable<Spaceship> spaceships = spaceshipRepository.findAll();
         model.addAttribute("crews", crews);
         model.addAttribute("products", products);
+        model.addAttribute("spaceships", spaceships);
         return "crew";
     }
 
@@ -99,7 +100,7 @@ public class CrewmembersController {
         }
     }
 
-    @PutMapping("/change_spaceship")
+    @PutMapping("/change-spaceship")
     public ResponseEntity<Crewmembers> changeSpaceship(@RequestParam Long crew_id, @RequestParam Long spaceship_id) {
         try {
             Crewmembers crew = crewmembersRepository.findById(crew_id).get();
@@ -116,7 +117,7 @@ public class CrewmembersController {
         }
     }
 
-    @PutMapping("add_product")
+    @PutMapping("add-product")
     public ResponseEntity<Crewmembers> addProduct(@RequestParam Long crew_id, @RequestParam Long product_id) {
         try {
             Boolean validation = true;
@@ -128,8 +129,10 @@ public class CrewmembersController {
 
             Iterable<Productxcrew> pxc = productxcrewRepository.findAll();
             for (Productxcrew productxcrew : pxc) {
-                if (productxcrew.getCrew().getId() == crew_id && productxcrew.getProduct().getId() == product_id)
-                    validation = false;
+                if (productxcrew.getCrew() != null && productxcrew.getProduct() != null) {
+                    if (productxcrew.getCrew().getId() == crew_id && productxcrew.getProduct().getId() == product_id)
+                        validation = false;
+                }
             }
 
             if (!validation)
@@ -138,11 +141,12 @@ public class CrewmembersController {
             crewmembersRepository.save(crew);
             return new ResponseEntity<>(crew, null, HttpStatus.OK);
         } catch (Exception e) {
+            logger.info(e.toString());
             return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PutMapping("remove_product")
+    @PutMapping("remove-product")
     public ResponseEntity<Crewmembers> removeProduct(@RequestParam Long crew_id, @RequestParam Long product_id) {
         try {
             Crewmembers crew = crewmembersRepository.findById(crew_id).get();
