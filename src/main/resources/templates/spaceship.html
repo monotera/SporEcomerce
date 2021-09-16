@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+</head>
+
+<body>
+    <h1>Spaceship view</h1>
+    <h2>Get All spaceships</h2>
+    <form action="http://localhost:8080/spaceship/spaceships" method="GET">
+        <button type="submit">Continue!</button>
+    </form>
+
+    <h2>Create a spaceship</h2>
+    <form>
+        <label for="create_ship_name">Ship name</label>
+        <input id="create_ship_name" name="create_ship_name" type="text" /><br />
+        <label for="create_ship_load">Ship load</label>
+        <input id="create_ship_load" name="create_ship_load" type="text" /><br />
+        <label for="create_ship_velocity">Ship velocity</label>
+        <input id="create_ship_velocity" name="create_ship_velocity" type="text" /><br />
+        <button type="button" th:onClick="createShip()">Send!</button>
+    </form>
+
+    <h2>Select the spaceship you want to operate</h2>
+    <form action="http://localhost:8080/spaceship">
+        <label for="spaceship_id">Select a spaceship</label>
+        <select name="spaceship_id" id="spaceship_id">
+            <option th:each="spaceship : ${spaceships}" th:value="${spaceship.id}" th:text="${spaceship.ship_name}">test
+            </option>
+        </select>
+        <button type="submit">Get this spaceship info!</button>
+    </form>
+
+    <h2>Move spaceship to another star</h2>
+    <form>
+        <label for="star_id">Select a star</label>
+        <select name="star_id" id="star_id">
+            <option th:each="star : ${stars}" th:value="${star.id}" th:text="${star.name}">test</option>
+        </select>
+        <button type="button" th:onClick="moveShip()">Move spaceship!</button>
+    </form>
+
+
+    <h2>Update a spaceship</h2>
+    <p>NOTE: if changed the name, you have to reload the page</p>
+    <form>
+        <label for="up_ship_name">Ship name</label>
+        <input id="up_ship_name" name="up_ship_name" type="text" /><br />
+        <label for="up_ship_load">Ship load</label>
+        <input id="up_ship_load" name="up_ship_load" type="text" /><br />
+        <label for="up_ship_velocity">Ship velocity</label>
+        <input id="up_ship_velocity" name="up_ship_velocity" type="text" /><br />
+        <button type="button" th:onClick="updateShip()">Send!</button>
+    </form>
+
+    <h2>Delete spaceship</h2>
+    <p>NOTE: if the method is successful, it will return the deleted spaceship.</p>
+    <form>
+        <button type="button" th:onClick="deleteSpaceship()">Continue!</button>
+    </form>
+
+    <h2>Response</h2>
+    <p id="response"></p>
+
+
+
+
+    <script th:inline="javascript">
+        //const url = ` http://localhost:8080/spaceship?spaceship_id=${spaceship_id.value}`
+        //spaceship_id = spaceship_id.options[spaceship_id.selectedIndex];
+
+        const fetch_create_method = async (url, ship_name, ship_load, ship_velocity) => {
+            let response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    ship_name: ship_name,
+                    ship_load: ship_load,
+                    velocity: ship_velocity
+                })
+            });
+            if (response.status == 406 || response.status == 400)
+                alert("There inputs are invalid!")
+            else if (response.status == 500)
+                alert("There was an error in the server!")
+            else if (response.status == 200 || response.status == 201)
+                alert("The spaceship was created!")
+            return response.json();
+        }
+        const createShip = () => {
+
+            let p = document.querySelector("#response");
+            const url = `http://localhost:8080/spaceship`
+            const ship_name = document.querySelector("#create_ship_name").value;
+            const ship_load = document.querySelector("#create_ship_load").value;
+            const ship_velocity = document.querySelector("#create_ship_velocity").value;
+            fetch_create_method(url, ship_name, ship_load, ship_velocity).then(data => {
+                p.innerHTML = ''
+                p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(data)}`
+                location.reload()
+            })
+        }
+        const moveShip = () => {
+            let spaceship_id = document.querySelector("#spaceship_id");
+            let p = document.querySelector("#response");
+            let star_id = document.querySelector("#star_id");
+            star_id = star_id.options[star_id.selectedIndex];
+            spaceship_id = spaceship_id.options[spaceship_id.selectedIndex];
+            let url = `http://localhost:8080/spaceship/move_ship?spaceship_id=${spaceship_id.value}&star_id=${star_id.value}`
+            fetch_move_ship(url).then(data => {
+                p.innerHTML = ''
+                p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(data)}`
+            })
+        }
+        const fetch_move_ship = async (url) => {
+            let response = await fetch(url, {
+                method: "PUT"
+            });
+            if (response.status == 200)
+                alert("The ship has moved. If you want to see it, check the star info in the star view")
+            return response.json()
+        }
+        const fetch_delete_ship_method = async (url) => {
+            let response = await fetch(url, { method: "delete" });
+            return response.json()
+        }
+        const deleteSpaceship = () => {
+            let spaceship_id = document.querySelector("#spaceship_id");
+            let p = document.querySelector("#response");
+            spaceship_id = spaceship_id.options[spaceship_id.selectedIndex];
+            let url = `http://localhost:8080/spaceship?spaceship_id=${spaceship_id.value}`
+            fetch_delete_ship_method(url).then(data => location.reload())
+        }
+        const updateShip = () => {
+            let spaceship_id = document.querySelector("#spaceship_id");
+            spaceship_id = spaceship_id.options[spaceship_id.selectedIndex];
+            let p = document.querySelector("#response");
+            let url = `http://localhost:8080/spaceship?spaceship_id=${spaceship_id.value}`
+            const ship_name = document.querySelector("#up_ship_name").value;
+            const ship_load = document.querySelector("#up_ship_load").value;
+            const ship_velocity = document.querySelector("#up_ship_velocity").value;
+            fetch_update_method(url, ship_name, ship_load, ship_velocity).then(data => {
+                p.innerHTML = ''
+                p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(data)}`
+            })
+        }
+        const fetch_update_method = async (url, ship_name, ship_load, ship_velocity) => {
+            let response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    ship_name: ship_name,
+                    ship_load: ship_load,
+                    velocity: ship_velocity
+                })
+            });
+            return response.json();
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+</head>
+
+<body>
+    <h1>Player view</h1>
+    <h2>Get All players</h2>
+    <form action="http://localhost:8080/player/players" method="GET">
+        <button type="submit">Continue!</button>
+    </form>
+
+    <h2>Create a player</h2>
+    <p>NOTE: you have to reload the page to see it in the dropdowns</p>
+    <form>
+        <label for="create_player_name">Player name</label>
+        <input id="create_player_name" name="create_player_name" type="text" /><br />
+        <label for="create_player_role">Select role</label>
+        <select name="create_player_role" id="create_player_role">
+            <option value="0">PILOT</option>
+            <option value="1">MERCHANT</option>
+            <option value="2">CAPTAIN</option>
+        </select>
+        <button type="button" th:onClick="createPlayer()">Send!</button>
+    </form>
+
+    <h2>Select the player you want to operate</h2>
+    <form action="http://localhost:8080/player">
+        <label for="player_id">Select a Player</label>
+        <select name="player_id" id="player_id">
+            <option th:each="player : ${players}" th:value="${player.id}" th:text="${player.player_name}">test
+            </option>
+        </select>
+        <button type="submit">Get this player info!</button>
+    </form>
+
+
+    <h2>Update a player</h2>
+    <p>NOTE: if changed the name, you have to reload the page</p>
+    <form>
+        <label for="up_player_name">Player name</label>
+        <input id="up_player_name" name="up_player_name" type="text" /><br />
+        <label for="up_player_role">Select role</label>
+        <select name="up_player_role" id="up_player_role">
+            <option value="0">PILOT</option>
+            <option value="1">MERCHANT</option>
+            <option value="2">CAPTAIN</option>
+        </select>
+        <button type="button" th:onClick="updatePlayer()">Send!</button>
+    </form>
+
+    <h2>Change crew</h2>
+    <form>
+        <label for="crew_id">Select a Crew</label>
+        <select name="crew_id" id="crew_id">
+            <option th:each="crew : ${crews}" th:value="${crew.id}" th:text="${crew.crew_name}">test
+            </option>
+        </select>
+        <button type="button" th:onClick="changeCrew()">send!</button>
+    </form>
+
+    <h2>Delete player</h2>
+    <p>NOTE: if the method is successful, it will return the deleted product.</p>
+    <form>
+        <button type="button" th:onClick="deletePlayer()">Continue!</button>
+    </form>
+
+    <h2>Response</h2>
+    <p id="response"></p>
+
+
+
+
+    <script th:inline="javascript">
+        const changeCrew = () => {
+            let p = document.querySelector("#response");
+            let crew_id = document.querySelector("#crew_id");
+            crew_id = crew_id.options[crew_id.selectedIndex];
+            let player_role = document.querySelector("#create_player_role");
+            player_role = player_role.options[player_role.selectedIndex];
+            let url = `http://localhost:8080/player/change_crew?player_id=${player_id.value}&crew_id=${crew_id.value}`
+            fetch_change_crew_method(url).then(data => {
+                p.innerHTML = ''
+                p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(data)}`
+            })
+        }
+
+        const fetch_change_crew_method = async (url) => {
+            let response = await fetch(url, { method: "PUT" });
+            return response.json();
+        }
+
+        const fetch_create_method = async (url, player_name, player_role) => {
+            let response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    player_name: player_name,
+                    player_role: player_role
+
+                })
+            });
+            if (response.status == 406 || response.status == 400)
+                alert("There inputs are invalid!")
+            else if (response.status == 500)
+                alert("There was an error in the server!")
+            else if (response.status == 200 || response.status == 201)
+                alert("The player was created!")
+            return response.json();
+        }
+        const createPlayer = () => {
+
+            let p = document.querySelector("#response");
+            const url = `http://localhost:8080/player`
+            const player_name = document.querySelector("#create_player_name").value;
+            let player_role = document.querySelector("#create_player_role");
+            player_role = player_role.options[player_role.selectedIndex];
+            fetch_create_method(url, player_name, player_role.value).then(data => {
+                p.innerHTML = ''
+                p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(data)}`
+            })
+        }
+
+
+        const fetch_delete_player_method = async (url) => {
+            let response = await fetch(url, { method: "delete" });
+            if (response.status == 200 || response.status == 201)
+                alert("The player was deleted!")
+            return response.json()
+        }
+        const deletePlayer = () => {
+            let player_id = document.querySelector("#player_id");
+            let p = document.querySelector("#response");
+            player_id = player_id.options[player_id.selectedIndex];
+            let url = `http://localhost:8080/player?player_id=${player_id.value}`
+            fetch_delete_player_method(url).then(data => location.reload())
+        }
+        const updatePlayer = () => {
+            let player_id = document.querySelector("#player_id");
+            player_id = player_id.options[player_id.selectedIndex];
+            let p = document.querySelector("#response");
+            let url = `http://localhost:8080/player?player_id=${player_id.value}`
+            const player_name = document.querySelector("#up_player_name").value;
+            let player_role = document.querySelector("#up_player_role");
+            player_role = player_role.options[player_role.selectedIndex];
+
+            fetch_update_method(url, player_name, player_role.value).then(data => {
+                p.innerHTML = ''
+                p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(data)}`
+            })
+        }
+        const fetch_update_method = async (url, player_name, player_role) => {
+            let response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    player_name: player_name,
+                    player_role: player_role
+                })
+            });
+            return response.json();
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+</head>
+
+<body>
+    <h1>Product view</h1>
+    <h2>Get All products</h2>
+    <form action="http://localhost:8080/product/products" method="GET">
+        <button type="submit">Continue!</button>
+    </form>
+
+    <h2>Create a product</h2>
+    <p>NOTE: you have to reload the page to see it in the dropdowns</p>
+    <form>
+        <label for="create_product_name">Product name</label>
+        <input id="create_product_name" name="create_product_name" type="text" /><br />
+        <label for="create_product_stock">Product stock</label>
+        <input id="create_product_stock" name="create_product_name" type="text" /><br />
+        <label for="create_product_capacity">Product load capacity</label>
+        <input id="create_product_capacity" name="create_product_capacity" type="text" /><br />
+        <label for="create_product_demand">Product demand</label>
+        <input id="create_product_demand" name="create_product_demand" type="text" /><br />
+        <label for="create_product_sale_price">Product sales price</label>
+        <input id="create_product_sale_price" name="create_product_sale_price" type="text" /><br />
+        <label for="create_product_offer">Product offer</label>
+        <input id="create_product_offer" name="create_product_offer" type="text" /><br />
+        <label for="create_product_purchase_price">Product purchase price</label>
+        <input id="create_product_purchase_price" name="create_product_purchase_price" type="text" /><br />
+        <label for="create_product_sp">Product SP</label>
+        <select name="create_product_sp" id="create_product_sp"><br />
+            <option value="true">true</option>
+            <option value="false">false</option>
+        </select><br />
+        <label for="create_product_pp">Product PP</label>
+        <select name="create_product_pp" id="create_product_pp">
+            <option value="true">true</option>
+            <option value="false">false</option>
+        </select><br />
+        <button type="button" th:onClick="createProduct()">Send!</button>
+    </form>
+
+    <h2>Select the product you want to operate</h2>
+    <form action="http://localhost:8080/product">
+        <label for="product_id">Select a Player</label>
+        <select name="product_id" id="product_id">
+            <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.product_name}">test
+            </option>
+        </select>
+        <button type="submit">Get this product info!</button>
+    </form>
+
+
+    <h2>Update a product</h2>
+    <p>NOTE: if changed the name, you have to reload the page</p>
+    <form>
+        <label for="up_product_name">Product name</label>
+        <input id="up_product_name" name="up_product_name" type="text" /><br />
+        <label for="up_product_stock">Product stock</label>
+        <input id="up_product_stock" name="up_product_stock" type="text" /><br />
+        <label for="up_product_capacity">Product load capacity</label>
+        <input id="up_product_capacity" name="up_product_capacity" type="text" /><br />
+        <label for="up_product_demand">Product demand</label>
+        <input id="up_product_demand" name="up_product_demand" type="text" /><br />
+        <label for="up_product_sale_price">Product sales price</label>
+        <input id="up_product_sale_price" name="up_product_sale_price" type="text" /><br />
+        <label for="up_product_offer">Product offer</label>
+        <input id="up_product_offer" name="up_product_offer" type="text" /><br />
+        <label for="up_product_purchase_price">Product purchase price</label>
+        <input id="up_product_purchase_price" name="up_product_purchase_price" type="text" /><br />
+        <label for="up_product_sp">Product SP</label>
+        <select name="up_product_sp" id="up_product_sp"><br />
+            <option value="true">true</option>
+            <option value="false">false</option>
+        </select><br />
+        <label for="up_product_pp">Product PP</label>
+        <select name="up_product_pp" id="up_product_pp">
+            <option value="true">true</option>
+            <option value="false">false</option>
+        </select><br />
+        <button type="button" th:onClick="updateProduct()">Send!</button>
+    </form>
+
+    <h2>Delete product</h2>
+    <p>NOTE: if the method is successful, it will return the deleted product.</p>
+    <form>
+        <button type="button" th:onClick="deleteProduct()">Continue!</button>
+    </form>
+
+    <h2>Response</h2>
+    <p id="response"></p>
+
+
+
+
+    <script th:inline="javascript">
+        //const url = ` http://localhost:8080/spaceship?spaceship_id=${spaceship_id.value}`
+        //spaceship_id = spaceship_id.options[spaceship_id.selectedIndex];
+
+        const fetch_create_method = async (url, product_name, product_stock, product_capacity, product_demand, product_sale_price, product_offer, product_purchase_price, product_sp, product_pp) => {
+            let response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    product_name: product_name,
+                    stock: product_stock,
+                    load_capacity: product_capacity,
+                    demand: product_demand,
+                    sales_price: product_sale_price,
+                    offer: product_offer,
+                    purchase_price: product_purchase_price,
+                    sp_: product_sp,
+                    pp_: product_pp
+
+                })
+            });
+            if (response.status == 406 || response.status == 400 || response.status == 409)
+                alert("There inputs are invalid!")
+            else if (response.status == 500)
+                alert("There was an error in the server!")
+            else if (response.status == 200 || response.status == 201)
+                alert("The product was created!")
+            return response.json();
+        }
+        const createProduct = () => {
+
+            let p = document.querySelector("#response");
+            const url = `http://localhost:8080/product`
+            const product_name = document.querySelector("#create_product_name").value
+            const product_stock = document.querySelector("#create_product_stock").value
+            const product_capacity = document.querySelector("#create_product_capacity").value
+            const product_demand = document.querySelector("#create_product_demand").value
+            const product_sale_price = document.querySelector("#create_product_sale_price").value
+            const product_offer = document.querySelector("#create_product_offer").value
+            const product_purchase_price = document.querySelector("#create_product_purchase_price").value
+            let product_sp = document.querySelector("#create_product_sp");
+            product_sp = product_sp.options[product_sp.selectedIndex];
+            let product_pp = document.querySelector("#create_product_pp");
+            product_pp = product_pp.options[product_pp.selectedIndex];
+
+            fetch_create_method(url, product_name, product_stock, product_capacity, product_demand, product_sale_price, product_offer, product_purchase_price, product_sp.value, product_pp.value).then(data => {
+                p.innerHTML = ''
+                p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(data)}`
+            })
+        }
+
+
+        const fetch_delete_product_method = async (url) => {
+            let response = await fetch(url, { method: "delete" });
+            if (response.status == 200 || response.status == 201)
+                alert("The product was deleted!")
+            return response.json()
+        }
+        const deleteProduct = () => {
+            let product_id = document.querySelector("#product_id");
+            let p = document.querySelector("#response");
+            product_id = product_id.options[product_id.selectedIndex];
+            let url = `http://localhost:8080/product?product_id=${product_id.value}`
+            fetch_delete_product_method(url).then(data => location.reload())
+        }
+        const updateProduct = () => {
+            let product_id = document.querySelector("#product_id");
+            product_id = product_id.options[product_id.selectedIndex];
+            let p = document.querySelector("#response");
+            let url = `http://localhost:8080/product?product_id=${product_id.value}`
+
+            const product_name = document.querySelector("#up_product_name").value
+            const product_stock = document.querySelector("#up_product_stock").value
+            const product_capacity = document.querySelector("#up_product_capacity").value
+            const product_demand = document.querySelector("#up_product_demand").value
+            const product_sale_price = document.querySelector("#up_product_sale_price").value
+            const product_offer = document.querySelector("#up_product_offer").value
+            const product_purchase_price = document.querySelector("#up_product_purchase_price").value
+            let product_sp = document.querySelector("#up_product_sp");
+            product_sp = product_sp.options[product_sp.selectedIndex];
+            let product_pp = document.querySelector("#up_product_pp");
+            product_pp = product_pp.options[product_pp.selectedIndex];
+
+            fetch_update_method(url, product_name, product_stock, product_capacity, product_demand, product_sale_price, product_offer, product_purchase_price, product_sp.value, product_pp.value).then(data => {
+                p.innerHTML = ''
+                p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(data)}`
+            })
+        }
+        const fetch_update_method = async (url, product_name, product_stock, product_capacity, product_demand, product_sale_price, product_offer, product_purchase_price, product_sp, product_pp) => {
+            let response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    product_name: product_name,
+                    stock: product_stock,
+                    load_capacity: product_capacity,
+                    demand: product_demand,
+                    sales_price: product_sale_price,
+                    offer: product_offer,
+                    purchase_price: product_purchase_price,
+                    sp_: product_sp,
+                    pp_: product_pp
+                })
+            });
+            if (response.status == 406 || response.status == 400 || response.status == 409)
+                alert("There inputs are invalid!")
+            else if (response.status == 500)
+                alert("There was an error in the server!")
+            else if (response.status == 200 || response.status == 201)
+                alert("The product was updated!")
+            return response.json();
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+</head>
+
+<body>
+    <h1>Planet view</h1>
+    <h2>Get All planets</h2>
+    <form action="http://localhost:8080/planet/planets" method="GET">
+        <button type="submit">Continue!</button>
+    </form>
+
+    <h2>Create a planet</h2>
+    <p>NOTE: you have to reload the page to see it in the dropdowns</p>
+    <form>
+        <label for="create_planet_name">Planet name</label>
+        <input id="create_planet_name" name="create_planet_name" type="text" /><br />
+        <button type="button" th:onClick="createPlanet()">Send!</button>
+    </form>
+
+    <h2>Select the planet you want to operate</h2>
+    <form action="http://localhost:8080/planet">
+        <label for="planet_id">Select a planet</label>
+        <select name="planet_id" id="planet_id">
+            <option th:each="planet : ${planets}" th:value="${planet.id}" th:text="${planet.planet_name}">test
+            </option>
+        </select>
+        <button type="submit">Get this planet info!</button>
+    </form>
+
+
+    <h2>Update a planet</h2>
+    <p>NOTE: if changed the name, you have to reload the page</p>
+    <form>
+        <label for="up_planet_name">Planet name</label>
+        <input id="up_planet_name" name="up_planet_name" type="text" /><br />
+        <button type="button" th:onClick="updatePlanet()">Send!</button>
+    </form>
+
+    <h2>Add product</h2>
+    <form>
+        <label for="create_product_id">Select a product</label>
+        <select name="create_product_id" id="create_product_id">
+            <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.product_name}">test
+            </option>
+        </select>
+
+        <button type="button" th:onClick="addProduct()">Send!</button>
+    </form>
+
+    <h2>Remove product</h2>
+    <form>
+        <label for="remove_product_id">Select a product</label>
+        <select name="remove_product_id" id="remove_product_id">
+            <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.product_name}">test
+            </option>
+        </select>
+
+        <button type="button" th:onClick="removeProduct()">Send!</button>
+    </form>
+
+
+    <h2>Delete planet</h2>
+    <p>NOTE: if the method is successful, it will return the deleted product.</p>
+    <form>
+        <button type="button" th:onClick="deletePlanet()">Continue!</button>
+    </form>
+
+    <h2>Response</h2>
+    <p id="response"></p>
+
+
+
+
+    <script th:inline="javascript">
+        const addProduct = () => {
+            let p = document.querySelector("#response");
+            let planet_id = document.querySelector("#planet_id");
+            planet_id = planet_id.options[planet_id.selectedIndex];
+            let product_id = document.querySelector("#create_product_id")
+            product_id = product_id.options[product_id.selectedIndex];
+            let url = `http://localhost:8080/planet/add-product?planet_id=${planet_id.value}&product_id=${product_id.value}`
+
+            fetch_product_method(url).then(data => {
+                p.innerHTML = ''
+                p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(data)}`
+            })
+        }
+        const removeProduct = () => {
+            let p = document.querySelector("#response");
+            let planet_id = document.querySelector("#planet_id");
+            planet_id = planet_id.options[planet_id.selectedIndex];
+            let product_id = document.querySelector("#remove_product_id")
+            product_id = product_id.options[product_id.selectedIndex];
+            let url = `http://localhost:8080/planet/remove-product?planet_id=${planet_id.value}&product_id=${product_id.value}`
+
+            fetch_product_method(url).then(data => {
+                p.innerHTML = ''
+                p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(data)}`
+            })
+        }
+
+        const fetch_product_method = async (url) => {
+            let response = await fetch(url, { method: "PUT" });
+            return response.json();
+        }
+
+        const fetch_create_method = async (url, planet_name) => {
+            let response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    planet_name: planet_name
+                })
+            });
+            if (response.status == 406 || response.status == 400)
+                alert("There inputs are invalid!")
+            else if (response.status == 500)
+                alert("There was an error in the server!")
+            else if (response.status == 200 || response.status == 201)
+                alert("The planet was created!")
+            return response.json();
+        }
+        const createPlanet = () => {
+
+            let p = document.querySelector("#response");
+            const url = `http://localhost:8080/planet`
+            const planet_name = document.querySelector("#create_planet_name").value;
+            fetch_create_method(url, planet_name).then(data => {
+                p.innerHTML = ''
+                p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(data)}`
+            })
+        }
+
+
+        const fetch_delete_method = async (url) => {
+            let response = await fetch(url, { method: "delete" });
+            return response.json()
+        }
+        const deletePlanet = () => {
+            let planet_id = document.querySelector("#planet_id");
+            planet_id = planet_id.options[planet_id.selectedIndex];
+            let url = `http://localhost:8080/planet?planet_id=${planet_id.value}`
+            fetch_delete_method(url).then(data => location.reload())
+        }
+        const updatePlanet = () => {
+            let planet_id = document.querySelector("#planet_id");
+            planet_id = planet_id.options[planet_id.selectedIndex];
+            let p = document.querySelector("#response");
+            let url = `http://localhost:8080/planet?planet_id=${planet_id.value}`
+
+            const planet_name = document.querySelector("#up_planet_name").value;
+            fetch_update_method(url, planet_name).then(data => {
+                p.innerHTML = ''
+                p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(data)}`
+            })
+        }
+        const fetch_update_method = async (url, planet_name) => {
+            let response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    planet_name: planet_name
+                })
+            });
+            return response.json();
+        }
+    </script>
+</body>
+
+</html>

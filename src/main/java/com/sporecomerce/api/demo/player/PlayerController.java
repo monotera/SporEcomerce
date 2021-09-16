@@ -8,8 +8,6 @@ import com.sporecomerce.api.demo.crewmembers.CrewmembersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,8 +15,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/player")
 public class PlayerController {
 
@@ -27,15 +26,6 @@ public class PlayerController {
 
     @Autowired
     CrewmembersRepository crewmembersRepository;
-
-    @GetMapping("/view")
-    public String getMainPage(Model model) {
-        Iterable<Player> players = playerRepository.findAll();
-        Iterable<Crewmembers> crews = crewmembersRepository.findAll();
-        model.addAttribute("players", players);
-        model.addAttribute("crews", crews);
-        return "player";
-    }
 
     @GetMapping("/players")
     public ResponseEntity<ArrayList<Player>> getPLayers() {
@@ -83,7 +73,9 @@ public class PlayerController {
             Crewmembers crewmembers = crewmembersRepository.findById(crew_id).get();
             if (player == null || crewmembers == null)
                 return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
-            player.getCrewmembers().getPlayer_list().remove(player);
+            if (player.getCrewmembers() != null) {
+                player.getCrewmembers().getPlayer_list().remove(player);
+            }
             crewmembers.addPlayer(player);
             playerRepository.save(player);
             return new ResponseEntity<>(player, null, HttpStatus.OK);
@@ -95,7 +87,7 @@ public class PlayerController {
     @PostMapping("")
     public ResponseEntity<Player> createPlayer(@RequestBody Player player) {
         try {
-            if (player.getPlayer_name() == null || player.getPlayer_role() == null)
+            if (player.getPlayer_name() == null || player.getPlayer_name() == "" || player.getPlayer_role() == null)
                 return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
             playerRepository.save(player);
             return new ResponseEntity<>(player, null, HttpStatus.OK);
