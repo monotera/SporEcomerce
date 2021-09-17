@@ -1,4 +1,4 @@
-package com.sporecomerce.galaxy;
+package com.sporecomerce.api.demo.galaxy;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
-public class GalaxyGraphController {
+public class GalaxyGraphService {
 
     private GalaxyGraph galaxy = new GalaxyGraph();
     private Random random = new Random();

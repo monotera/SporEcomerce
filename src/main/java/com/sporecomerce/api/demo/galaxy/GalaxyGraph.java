@@ -1,10 +1,10 @@
-package com.sporecomerce.galaxy;
+package com.sporecomerce.api.demo.galaxy;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.sporecomerce.star.Star;
+import com.sporecomerce.api.demo.star.Star;
 
 public class GalaxyGraph {
 
@@ -80,7 +80,8 @@ public class GalaxyGraph {
             adjacencyList.add(new ArrayList<>());
     }
 
-    public GalaxyGraph(long galaxy_id, ArrayList<Star> galaxyContent, int vertices, int edges, Random random, List<List<Integer>> adjacencyList) {
+    public GalaxyGraph(long galaxy_id, ArrayList<Star> galaxyContent, int vertices, int edges, Random random,
+            List<List<Integer>> adjacencyList) {
         this.galaxy_id = galaxy_id;
         this.galaxyContent = galaxyContent;
         this.vertices = vertices;
@@ -92,7 +93,6 @@ public class GalaxyGraph {
     int computeMaxEdges(int numOfVertices) {
         return numOfVertices * ((numOfVertices - 1) / 2);
     }
-
 
     public long getGalaxy_id() {
         return this.galaxy_id;
@@ -112,16 +112,10 @@ public class GalaxyGraph {
 
     @Override
     public String toString() {
-        return "{" +
-            " galaxy_id='" + getGalaxy_id() + "'" +
-            ", galaxyContent='" + getGalaxyContent() + "'" +
-            ", vertices='" + getVertices() + "'" +
-            ", edges='" + getEdges() + "'" +
-            ", MAX_EDGES='" + getMAX_EDGES() + "'" +
-            ", MAX_VERTICES='" + getMAX_VERTICES() + "'" +
-            ", random='" + getRandom() + "'" +
-            ", adjacencyList='" + getAdjacencyList() + "'" +
-            "}";
+        return "{" + " galaxy_id='" + getGalaxy_id() + "'" + ", galaxyContent='" + getGalaxyContent() + "'"
+                + ", vertices='" + getVertices() + "'" + ", edges='" + getEdges() + "'" + ", MAX_EDGES='"
+                + getMAX_EDGES() + "'" + ", MAX_VERTICES='" + getMAX_VERTICES() + "'" + ", random='" + getRandom() + "'"
+                + ", adjacencyList='" + getAdjacencyList() + "'" + "}";
     }
 
 }
