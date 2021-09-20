@@ -62,6 +62,10 @@ public class Product {
         this.PP_ = PP_;
     }
 
+    public Product(Long id){
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

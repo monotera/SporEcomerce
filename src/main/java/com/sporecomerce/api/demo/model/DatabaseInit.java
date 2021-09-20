@@ -2,11 +2,17 @@ package com.sporecomerce.api.demo.model;
 
 import javax.transaction.Transactional;
 
+import java.util.ArrayList;
+import java.util.Random;
+
+import com.sporecomerce.api.demo.crewmembers.CrewGenerator;
 import com.sporecomerce.api.demo.crewmembers.Crewmembers;
 import com.sporecomerce.api.demo.crewmembers.CrewmembersRepository;
+import com.sporecomerce.api.demo.galaxy.GalaxyGraph;
 import com.sporecomerce.api.demo.planet.Planet;
 import com.sporecomerce.api.demo.planet.PlanetRepository;
 import com.sporecomerce.api.demo.player.Player;
+import com.sporecomerce.api.demo.player.PlayerGenerator;
 import com.sporecomerce.api.demo.player.PlayerRepository;
 import com.sporecomerce.api.demo.player.Role;
 import com.sporecomerce.api.demo.product.Product;
@@ -14,8 +20,11 @@ import com.sporecomerce.api.demo.product.ProductRepository;
 import com.sporecomerce.api.demo.productxcrew.ProductxcrewRepository;
 import com.sporecomerce.api.demo.productxplanet.ProductxplanetRepository;
 import com.sporecomerce.api.demo.spaceship.Spaceship;
+import com.sporecomerce.api.demo.spaceship.SpaceshipGenerator;
 import com.sporecomerce.api.demo.spaceship.SpaceshipRepository;
+import com.sporecomerce.api.demo.spaceship.SpaceshipRole;
 import com.sporecomerce.api.demo.star.Star;
+import com.sporecomerce.api.demo.star.StarGenerator;
 import com.sporecomerce.api.demo.star.StarRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +34,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DatabaseInit implements ApplicationRunner {
+
+    private int nProducts;
+    private int nStars;
+    private int prob;
+    private int nCrewmembers;
+    private int nSpaceships;
+    private int nPlayers;
+
 
     @Autowired
     StarRepository starRepository;
@@ -54,6 +71,43 @@ public class DatabaseInit implements ApplicationRunner {
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
 
+        GalaxyGraph spore = new GalaxyGraph();
+
+        this.nProducts = 500;
+        ArrayList<String> pr = generate_products_names(nProducts);
+
+        nStars = 40000;
+        ArrayList<Star> st = generate_stars(pr, spore);
+
+        nSpaceships = 20;
+        ArrayList<Spaceship> sp = generate_spaceships();
+
+        nCrewmembers = 10;
+        ArrayList<Crewmembers> sc = generate_crewmembers(sp);
+
+        nPlayers = 10;
+        ArrayList<Player> pl = generate_players(sc);
+
+        for (Star s : st) {
+            save_o(s);
+            for (Planet s1 : s.getPlanetList()) {
+                save_o(s1);
+            }
+        }
+
+        for (Spaceship s : sp) {
+            save_o(s);
+        }
+
+        for (Crewmembers s : sc) {
+            save_o(s);
+        }
+
+        for (Player s : pl) {
+            save_o(s);
+        }
+
+        /*
         Star star1 = new Star(10, 5, 10, "Main Star", true);
         Star star2 = new Star(11, 4, 10, "Sta2r", true);
 
@@ -127,6 +181,118 @@ public class DatabaseInit implements ApplicationRunner {
         c1.addProduct(pr2);
         c3.addProduct(pr4);
         c2.addProduct(pr4);
+        */
+    }
+
+    private ArrayList<String> generate_products_names(int n){
+        ArrayList<String> test = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            String name = "161815" + String.valueOf(i);
+            test.add(name);
+        }
+        return test;
+    }
+
+    private ArrayList<Spaceship> generate_spaceships() {
+        ArrayList<Spaceship> test = new ArrayList<>();
+        SpaceshipGenerator c = new SpaceshipGenerator();
+        int i = 1;
+
+        for (SpaceshipRole dir : SpaceshipRole.values()) {
+            Spaceship p = new Spaceship();
+            c.initial(p, dir, i);
+            test.add(p);
+            i ++;
+        }
+        return test;
+    }
+
+    private ArrayList<Star> generate_stars(ArrayList<String> productNames, GalaxyGraph spore){
+        ArrayList<Star> test = new ArrayList<>();
+        Random random = new Random();
+        StarGenerator gS = new StarGenerator();
+
+        for(int i=0; i<nStars; i++){
+            Long id = Long.parseLong("192001" + String.valueOf(i));
+            boolean habited = (random.nextInt(prob) == 0) ? true : false;
+
+            Star e = new Star();
+            gS.initial(e, productNames, id, habited);
+            
+            spore.getGalaxyContent().add(e);
+            test.add(e);
+        }
+
+        return test;
+    }
+
+    private ArrayList<Crewmembers> generate_crewmembers(ArrayList<Spaceship> sp) {
+        ArrayList<Crewmembers> test = new ArrayList<>();
+        Random random = new Random();
+        CrewGenerator gC = new CrewGenerator();
+
+        for(int i=0; i<nCrewmembers; i++){
+            Long id = Long.parseLong("031805" + String.valueOf(i));
+            Spaceship n = sp.get(random.nextInt(nSpaceships));
+            Crewmembers t = new Crewmembers();
+
+            gC.initial(t, id, n);
+            test.add(t);
+        
+        }
+
+        return test;
+    }
+
+    private ArrayList<Player> generate_players(ArrayList<Crewmembers> sc){
+        ArrayList<Player> test = new ArrayList<>();
+        PlayerGenerator gP = new PlayerGenerator();
+
+        for (Crewmembers c : sc) {
+            for (int i = 0; i < nPlayers; i++) {
+                
+                Long id = Long.parseLong("161201" + String.valueOf(i) + String.valueOf(c.getId()));
+                Player p = new Player();
+                
+                gP.initial(p, id);
+                c.getPlayer_list().add(p);
+
+                test.add(p);
+            }
+        }
+
+        return test;
+    }
+
+    private Boolean save_o(Object obj){
+        Boolean sentry = false;
+        if(obj.getClass().equals(Crewmembers.class)){
+            crewmembersRepository.save((Crewmembers)obj);
+            sentry = true;
+        }
+        if(obj.getClass().equals(Planet.class)){
+            planetRepository.save((Planet)obj);
+            sentry = true;
+        }
+        if(obj.getClass().equals(Player.class)){
+            playerRepository.save((Player)obj);
+            sentry = true;
+        }
+        if(obj.getClass().equals(Product.class)){
+            productRepository.save((Product)obj);
+            sentry = true;
+        }
+        if(obj.getClass().equals(Spaceship.class)){
+            spaceshipRepository.save((Spaceship)obj);
+            sentry = true;
+        }
+        if(obj.getClass().equals(Star.class)){
+            starRepository.save((Star)obj);
+            sentry = true;
+        }
+        
+        return sentry;
     }
 
 }

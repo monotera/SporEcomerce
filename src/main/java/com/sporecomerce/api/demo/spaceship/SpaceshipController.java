@@ -63,7 +63,7 @@ public class SpaceshipController {
 
             spaceship.setId(oldSpaceship.getId());
             spaceship.setStar(oldSpaceship.getStar());
-            if (spaceship.getShip_name() == null || spaceship.getShip_name() == "")
+            if (spaceship.getShip_name() == null)
                 spaceship.setShip_name(oldSpaceship.getShip_name());
 
             if (spaceship.getShip_load() == 0.0)

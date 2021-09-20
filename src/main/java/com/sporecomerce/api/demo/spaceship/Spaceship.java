@@ -16,7 +16,7 @@ public class Spaceship {
     @Id
     @GeneratedValue
     private long id;
-    private String ship_name;
+    private SpaceshipRole ship_name;
     private double ship_load;
     private double velocity;
 
@@ -31,7 +31,7 @@ public class Spaceship {
     public Spaceship() {
     }
 
-    public Spaceship(String ship_name, double ship_load, double velocity) {
+    public Spaceship(SpaceshipRole ship_name, double ship_load, double velocity) {
 
         this.ship_name = ship_name;
         this.ship_load = ship_load;
@@ -62,11 +62,11 @@ public class Spaceship {
         this.star = star;
     }
 
-    public String getShip_name() {
+    public SpaceshipRole getShip_name() {
         return this.ship_name;
     }
 
-    public void setShip_name(String ship_name) {
+    public void setShip_name(SpaceshipRole ship_name) {
         this.ship_name = ship_name;
     }
 
