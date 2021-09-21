@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class SpaceshipGenerator {
     //Initial values
-    public Boolean initial(Spaceship ship, SpaceshipRole role, int i){
+    public Boolean initial(Spaceship ship, String role, int i){
         Random random = new Random();
         Integer load = 60;
         Integer velocity = 1600;
@@ -14,7 +14,6 @@ public class SpaceshipGenerator {
         ship.setShip_load(random.nextInt(bound)+load);
         ship.setVelocity(random.nextInt(bound)*velocity);
         ship.setShip_name(role);
-        ship.setId(Long.parseLong("190809"+String.valueOf(i)));
         
         sentry = true;
         return sentry;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.sporecomerce.api.demo.product.Product;
+import com.sporecomerce.api.demo.product.ProductGenerator;
 import com.sporecomerce.api.demo.productxplanet.Productxplanet;
 
 public class PlanetGenerator {
@@ -16,6 +17,7 @@ public class PlanetGenerator {
         ArrayList<Integer> num = new ArrayList<>(); //Products taken
         Product p;
         Boolean sentry = false;
+        ProductGenerator gP = new ProductGenerator();
 
         while (count < numProducts) {
             ran = random.nextInt(size);
@@ -24,8 +26,8 @@ public class PlanetGenerator {
                 p = new Product();
                 p.setProduct_name(listProducts.get(ran));
                 //idSet = 161815 for PROduct + 
-                p.setId(Long.parseLong("1618150"+String.valueOf(ran)));
-                
+                p.setProduct_name("1618150"+String.valueOf(ran));
+                gP.initial(p);
                 planet.addProduct(p);
 
                 sentry = true;

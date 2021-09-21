@@ -13,6 +13,8 @@ public class ProductGenerator {
         Integer offer = random.nextInt(bound);
         Integer demand = random.nextInt(bound);
         Boolean sentry = false;
+        product.setOffer(0);
+        product.setDemand(0);
 
         //Sets the load capacity
         product.setLoad_capacity(random.nextInt(capacity)/.8);
@@ -24,12 +26,12 @@ public class ProductGenerator {
         do{
             product.setPP_(random.nextBoolean());
             product.setSP_(random.nextBoolean());
-        }while(product.isPP_() || product.isSP_());
+        }while((product.isPP_() != true) && (product.isSP_() != true));
 
 
         //If the product is to be sold
         if(product.isPP_()){
-            product.setOffer(random.nextInt(offer));
+            product.setOffer(offer);
         }
 
         //If the product is to be purchased
@@ -49,13 +51,13 @@ public class ProductGenerator {
 
         //If the product is to be sold
         if(product.isPP_()){
-            product.setPurchase_price(offer/(1+stock));
+            product.setPurchase_price(offer/(1.0+stock));
             sentry = true;
         }
 
         //If the product is to be purchased
         if(product.isSP_()){
-            product.setSales_price(demand/(1+stock));
+            product.setSales_price(demand/(1.0+stock));
             sentry = true;
         }
         return sentry;

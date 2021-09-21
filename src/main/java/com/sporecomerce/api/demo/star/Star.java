@@ -3,6 +3,7 @@ package com.sporecomerce.api.demo.star;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -150,6 +151,39 @@ public class Star {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public void validateStar(ArrayList<Star> star_list){
+        Random random = new Random();
+        Integer bound = 300;
+        Boolean sentry1 = true;
+
+        while(sentry1){
+            sentry1 = false;
+
+            this.x = random.nextInt(bound);
+            this.y = random.nextInt(bound);
+            this.z = random.nextInt(bound);
+
+
+            for (Star s : star_list) {
+                if((s.getX() == this.x) && (s.getY() == this.y) && (s.getZ() == this.z)){
+                    sentry1 = true;
+                }
+            }
+        }
+    }
+
+    public Boolean validateCreateStar(ArrayList<Star> star_list){
+        Boolean sentry1 = true;
+
+        for (Star s : star_list) {
+            if((s.getX() == this.x) && (s.getY() == this.y) && (s.getZ() == this.z)){
+                sentry1 = false;
+            }
+        }
+        
+        return sentry1;
     }
 
     @Override

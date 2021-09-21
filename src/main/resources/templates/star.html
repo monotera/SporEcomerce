@@ -155,6 +155,8 @@
                     isInHabited: isInhabited
                 })
             });
+            if (response.status == 409)
+                alert("The position is already taken")
             return response.json();
         }
         const fetch_delete_method = async (url) => {
@@ -193,6 +195,8 @@
                 alert("There was an error in the server!")
             else if (response.status == 200 || response.status == 201)
                 alert("The star was created!")
+            else if (response.status == 409)
+                alert("The position is already taken")
             return response.json();
         }
 

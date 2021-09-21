@@ -71,23 +71,24 @@ public class DatabaseInit implements ApplicationRunner {
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
 
-        prob = 99;
+        prob = 1;
         GalaxyGraph spore = new GalaxyGraph();
 
         nProducts = 500;
         ArrayList<String> pr = generate_products_names(nProducts);
 
-        nStars = 40000;
+        nStars = 400;
         ArrayList<Star> st = generate_stars(pr, spore);
 
         nSpaceships = 20;
-        ArrayList<Spaceship> sp = generate_spaceships();
+        ArrayList<Spaceship> sp = generate_spaceships(st);
 
         nCrewmembers = 10;
         ArrayList<Crewmembers> sc = generate_crewmembers(sp);
 
         nPlayers = 10;
         ArrayList<Player> pl = generate_players(sc);
+
 
         for (Star s : st) {
             save_o(s);
@@ -184,6 +185,7 @@ public class DatabaseInit implements ApplicationRunner {
         c2.addProduct(pr4);
         */
     }
+    
     //TODO: CAMBIAR A LSITA DE PRODUCTOS
     private ArrayList<String> generate_products_names(int n){
         ArrayList<String> test = new ArrayList<>();
@@ -195,14 +197,17 @@ public class DatabaseInit implements ApplicationRunner {
         return test;
     }
 
-    private ArrayList<Spaceship> generate_spaceships() {
+    private ArrayList<Spaceship> generate_spaceships(ArrayList<Star> st) {
         ArrayList<Spaceship> test = new ArrayList<>();
         SpaceshipGenerator c = new SpaceshipGenerator();
         int i = 1;
 
         for (SpaceshipRole dir : SpaceshipRole.values()) {
             Spaceship p = new Spaceship();
-            c.initial(p, dir, i);
+            Random random = new Random();
+
+            p.changeStar(st.get(random.nextInt(st.size())), null);
+            c.initial(p, dir.toString(), i);
             test.add(p);
             i ++;
         }
@@ -215,13 +220,13 @@ public class DatabaseInit implements ApplicationRunner {
         StarGenerator gS = new StarGenerator();
 
         for(int i=0; i<nStars; i++){
-            Long id = Long.parseLong("192001" + String.valueOf(i));
+            String id = "192001" + String.valueOf(i);
             boolean habited = (random.nextInt(prob) == 0) ? true : false;
 
             Star e = new Star();
-            gS.initial(e, productNames, id, habited);
+            gS.initial(e, productNames, id, habited, test);
             
-            spore.getGalaxyContent().add(e);
+            //spore.getGalaxyContent().add(e);
             test.add(e);
         }
 
@@ -230,17 +235,15 @@ public class DatabaseInit implements ApplicationRunner {
 
     private ArrayList<Crewmembers> generate_crewmembers(ArrayList<Spaceship> sp) {
         ArrayList<Crewmembers> test = new ArrayList<>();
-        Random random = new Random();
         CrewGenerator gC = new CrewGenerator();
 
         for(int i=0; i<nCrewmembers; i++){
-            Long id = Long.parseLong("031805" + String.valueOf(i));
-            Spaceship n = sp.get(random.nextInt(nSpaceships));
+            String id = "031805" + String.valueOf(i);
+            Spaceship n = sp.get(i);
             Crewmembers t = new Crewmembers();
 
             gC.initial(t, id, n);
             test.add(t);
-        
         }
 
         return test;
@@ -249,15 +252,20 @@ public class DatabaseInit implements ApplicationRunner {
     private ArrayList<Player> generate_players(ArrayList<Crewmembers> sc){
         ArrayList<Player> test = new ArrayList<>();
         PlayerGenerator gP = new PlayerGenerator();
+        Random random = new Random();
 
         for (Crewmembers c : sc) {
             for (int i = 0; i < nPlayers; i++) {
-                
-                Long id = Long.parseLong("161201" + String.valueOf(i) + String.valueOf(c.getId()));
+                String id = "161201" + String.valueOf(i) + String.valueOf(c.getId());
                 Player p = new Player();
+                Role r = Role.values()[random.nextInt(2)+1];
                 
-                gP.initial(p, id);
-                c.getPlayer_list().add(p);
+                if(i == 0){
+                    r = Role.values()[0];
+                }
+                
+                gP.initial(p, id, r);
+                c.addPlayer(p);
 
                 test.add(p);
             }

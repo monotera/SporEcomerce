@@ -53,9 +53,8 @@ public class Crewmembers {
         this.credits = credits;
     }
 
-    public Crewmembers(long crew_id, String crew_name, Integer accTime, double credits, Spaceship space_crew,
+    public Crewmembers( String crew_name, Integer accTime, double credits, Spaceship space_crew,
             ArrayList<Player> player_list, Set<Productxcrew> products) {
-        this.id = crew_id;
         this.crew_name = crew_name;
         this.accTime = accTime;
         this.credits = credits;

@@ -7,16 +7,16 @@ import com.sporecomerce.api.demo.spaceship.Spaceship;
 
 public class CrewGenerator {
     //Initial values
-    public Boolean initial(Crewmembers crew, Long crew_id, Spaceship ship) {
+    public Boolean initial(Crewmembers crew, String crew_id, Spaceship ship) {
         Boolean sentry = false;
         crew.setAccTime(0);
         crew.setCredits(1000000);
-        crew.setId(crew_id);
+        crew.setCrew_name(crew_id);
         crew.setSpace_crew(ship);
         sentry = true;
         return sentry;
     }
-
+/*
     //Adds a player to a crew, verifies that the crew does not exceed the set size
     public Boolean addPlayer(Crewmembers crew, Player P1){
         Boolean sentry = false;
@@ -28,7 +28,7 @@ public class CrewGenerator {
         }
         return sentry;
     }
-
+*/
     //Remove a player from a crew
     public Boolean deletePlayer(Crewmembers crew, Long idP1){
         ArrayList<Player> cPlayer = new ArrayList<>(crew.getPlayer_list());

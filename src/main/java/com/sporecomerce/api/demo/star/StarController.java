@@ -64,9 +64,14 @@ public class StarController {
     @PostMapping("")
     public ResponseEntity<Star> createStar(@RequestBody Star star) {
         try {
-            // TODO:Check if posistions are valid
             if (star.getName() == "" || star.getIsInHabited() == null)
                 throw new Exception("Invalid data");
+            Iterable<Star> data = starRepository.findAll();
+            ArrayList<Star> stars = new ArrayList<>();
+            data.forEach(stars::add);
+            if(!star.validateCreateStar(stars)){
+                return new ResponseEntity<>(null, null, HttpStatus.CONFLICT);
+            }
             Star newStar = starRepository.save(star);
             return new ResponseEntity<>(newStar, null, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -153,7 +158,13 @@ public class StarController {
                 star.setY(oldStar.getY());
             if (star.getZ() == -1)
                 star.setZ(oldStar.getZ());
-            // TODO: check positions if its valid
+        
+            Iterable<Star> data = starRepository.findAll();
+            ArrayList<Star> stars = new ArrayList<>();
+            data.forEach(stars::add);
+            if(!star.validateCreateStar(stars)){
+                return new ResponseEntity<>(null, null, HttpStatus.CONFLICT);
+            }
             starRepository.save(star);
             return new ResponseEntity<>(star, null, HttpStatus.OK);
         } catch (Exception e) {

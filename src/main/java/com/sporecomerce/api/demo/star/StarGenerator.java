@@ -9,14 +9,15 @@ import com.sporecomerce.api.demo.spaceship.Spaceship;
 
 public class StarGenerator {
     //Initial values
-    public Boolean initial(Star star, ArrayList<String> productNames, Long star_id, Boolean habited) {
+    public Boolean initial(Star star, ArrayList<String> productNames, String star_id, Boolean habited, ArrayList<Star> star_list) {
         PlanetGenerator gP = new PlanetGenerator();
         Random random = new Random();
         int numPlanets = 0;
-        long id = 0;
         Boolean sentry = false;
 
-        star.setId(star_id);
+        star.validateStar(star_list);
+
+        star.setName(star_id);
         star.setIsInHabited(habited);
 
         if(star.getIsInHabited()){
@@ -24,10 +25,10 @@ public class StarGenerator {
              for (int i = 0; i < numPlanets; i++) {
                  Planet p = new Planet();
                  //idSet = 161201 for PLAnet + star_id + numPlanet
-                 id = Long.parseLong("1612010"+String.valueOf(star.getId())+String.valueOf(i));
-                 p.setId(id);
+                 String id = "1612010"+String.valueOf(star.getId())+String.valueOf(i);
+                 p.setPlanet_name(id);
                  gP.initial(p, productNames);
-                 star.getPlanetList().add(p);
+                 star.addPlanet(p);
              }
              sentry = true;
         }
