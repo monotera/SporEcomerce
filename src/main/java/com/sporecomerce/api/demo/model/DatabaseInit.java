@@ -17,6 +17,7 @@ import com.sporecomerce.api.demo.player.PlayerRepository;
 import com.sporecomerce.api.demo.player.Role;
 import com.sporecomerce.api.demo.product.Product;
 import com.sporecomerce.api.demo.product.ProductRepository;
+import com.sporecomerce.api.demo.product.ProductRole;
 import com.sporecomerce.api.demo.productxcrew.ProductxcrewRepository;
 import com.sporecomerce.api.demo.productxplanet.ProductxplanetRepository;
 import com.sporecomerce.api.demo.spaceship.Spaceship;
@@ -189,9 +190,22 @@ public class DatabaseInit implements ApplicationRunner {
     //TODO: CAMBIAR A LSITA DE PRODUCTOS
     private ArrayList<String> generate_products_names(int n){
         ArrayList<String> test = new ArrayList<>();
+        int cont = 0;
+        int pro = 0;
 
         for (int i = 0; i < n; i++) {
-            String name = "161815" + String.valueOf(i);
+            String name;
+            if(pro == 0)
+                name = ProductRole.values()[cont].toString();
+            else 
+                name = ProductRole.values()[cont].toString() + "-0" +String.valueOf(pro);
+            
+            if(cont == 249){
+                cont = 0;
+                pro ++;
+            }
+                
+            cont ++;
             test.add(name);
         }
         return test;
@@ -220,7 +234,7 @@ public class DatabaseInit implements ApplicationRunner {
         StarGenerator gS = new StarGenerator();
 
         for(int i=0; i<nStars; i++){
-            String id = "192001" + String.valueOf(i);
+            String id = "XR-192" + String.valueOf(i);
             boolean habited = (random.nextInt(prob) == 0) ? true : false;
 
             Star e = new Star();

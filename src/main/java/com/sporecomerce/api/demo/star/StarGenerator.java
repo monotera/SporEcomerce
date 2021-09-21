@@ -25,7 +25,7 @@ public class StarGenerator {
              for (int i = 0; i < numPlanets; i++) {
                  Planet p = new Planet();
                  //idSet = 161201 for PLAnet + star_id + numPlanet
-                 String id = "1612010"+String.valueOf(star.getId())+String.valueOf(i);
+                 String id = "KL-161"+String.valueOf(star.getId())+String.valueOf(i);
                  p.setPlanet_name(id);
                  gP.initial(p, productNames);
                  star.addPlanet(p);

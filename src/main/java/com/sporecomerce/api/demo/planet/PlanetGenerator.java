@@ -25,8 +25,6 @@ public class PlanetGenerator {
             if(!num.contains(ran)){
                 p = new Product();
                 p.setProduct_name(listProducts.get(ran));
-                //idSet = 161815 for PROduct + 
-                p.setProduct_name("1618150"+String.valueOf(ran));
                 gP.initial(p);
                 planet.addProduct(p);
 
