@@ -9,8 +9,9 @@ import com.sporecomerce.api.demo.spaceship.Spaceship;
 import com.sporecomerce.api.demo.product.Product;
 
 public class StarGenerator {
-    //Initial values
-    public Boolean initial(Star star, ArrayList<Product> product_list, String star_id, Boolean habited, ArrayList<Star> star_list) {
+    // Initial values
+    public Boolean initial(Star star, ArrayList<Product> product_list, String star_id, Boolean habited,
+            ArrayList<Star> star_list) {
         PlanetGenerator gP = new PlanetGenerator();
         Random random = new Random();
         int numPlanets = 0;
@@ -21,28 +22,28 @@ public class StarGenerator {
         star.setName(star_id);
         star.setIsInHabited(habited);
 
-        if(star.getIsInHabited()){
-            numPlanets = random.nextInt(3)+1; //1 - 3 planets per inhabited star
-             for (int i = 0; i < numPlanets; i++) {
-                 Planet p = new Planet();
-                 //idSet = 161201 for PLAnet + star_id + numPlanet
-                 String id = "KL-161"+String.valueOf(star.getId())+String.valueOf(i);
-                 p.setPlanet_name(id);
-                 gP.initial(p, product_list);
-                 star.addPlanet(p);
-             }
-             sentry = true;
+        if (star.getIsInHabited()) {
+            numPlanets = random.nextInt(3) + 1; // 1 - 3 planets per inhabited star
+            for (int i = 0; i < numPlanets; i++) {
+                Planet p = new Planet();
+                // idSet = 161201 for PLAnet + star_id + numPlanet
+                String id = String.valueOf(star.getName()) + "KL-16" + String.valueOf(i);
+                p.setPlanet_name(id);
+                gP.initial(p, product_list);
+                star.addPlanet(p);
+            }
+            sentry = true;
         }
 
         return sentry;
     }
 
-    public Boolean shipEntering(Star star, Spaceship spaceship){
+    public Boolean shipEntering(Star star, Spaceship spaceship) {
         star.getSpaceLobby().add(spaceship);
         return true;
     }
 
-    public Boolean shipLeaving(Star star, Spaceship spaceship){
+    public Boolean shipLeaving(Star star, Spaceship spaceship) {
         star.getSpaceLobby().remove(spaceship);
         return true;
     }

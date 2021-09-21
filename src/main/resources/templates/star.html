@@ -171,6 +171,7 @@
             fetch_delete_method(url).then(deletedStar => {
                 p.innerHTML = ''
                 p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(deletedStar)}`
+                location.reload()
             });
         }
 
