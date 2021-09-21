@@ -15,7 +15,7 @@ public class SpaceshipGenerator {
         ship.setVelocity(random.nextInt(bound)*velocity);
         ship.setShip_name(role);
         ship.setId(Long.parseLong("190809"+String.valueOf(i)));
-
+        
         sentry = true;
         return sentry;
     }

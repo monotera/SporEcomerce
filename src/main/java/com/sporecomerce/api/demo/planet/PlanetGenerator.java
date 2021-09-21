@@ -25,8 +25,8 @@ public class PlanetGenerator {
                 p.setProduct_name(listProducts.get(ran));
                 //idSet = 161815 for PROduct + 
                 p.setId(Long.parseLong("1618150"+String.valueOf(ran)));
-                Productxplanet pp = new Productxplanet(p, planet);
-                planet.getProduct_list().add(pp);
+                
+                planet.addProduct(p);
 
                 sentry = true;
                 num.add(ran);

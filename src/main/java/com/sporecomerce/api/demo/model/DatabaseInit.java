@@ -71,9 +71,10 @@ public class DatabaseInit implements ApplicationRunner {
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
 
+        prob = 99;
         GalaxyGraph spore = new GalaxyGraph();
 
-        this.nProducts = 500;
+        nProducts = 500;
         ArrayList<String> pr = generate_products_names(nProducts);
 
         nStars = 40000;
@@ -183,7 +184,7 @@ public class DatabaseInit implements ApplicationRunner {
         c2.addProduct(pr4);
         */
     }
-
+    //TODO: CAMBIAR A LSITA DE PRODUCTOS
     private ArrayList<String> generate_products_names(int n){
         ArrayList<String> test = new ArrayList<>();
 
