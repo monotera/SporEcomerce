@@ -11,7 +11,6 @@ public enum ProductRole {
     Sword_of_Destiny,
     Staff_of_Benediction,
     Elixir_of_Delusion,
-
     Resistance_Instrument,
     Chaos_Fruit,
     Hellish_Seal,
@@ -22,7 +21,6 @@ public enum ProductRole {
     Circlet_of_Chaos,
     Arch_of_Malevolence,
     Tiara_of_Nightmares,
-
     Exiled_Disc,
     Nightmare_Door,
     Seduction_Chalice,
@@ -33,7 +31,6 @@ public enum ProductRole {
     Inscriptions_of_Restoration,
     Mantle_of_Doom,
     Gauntlet_of_Mysteries,
-
     Spellbound_Cylinder,
     Evil_Gem,
     Eternal_Fruit,
@@ -44,7 +41,6 @@ public enum ProductRole {
     Mask_of_Malady,
     Robes_of_Vice,
     Stone_of_Angels,
-
     Exile_Instrument,
     Immunity_Arch,
     All_Seeing_Runes,
@@ -55,7 +51,6 @@ public enum ProductRole {
     Urn_of_Warding,
     Letters_of_Lifeblood,
     Robes_of_Annihilation,
-
     Curse_Boots,
     Kismet_Grail,
     Anarchy_Fleece,
@@ -66,7 +61,6 @@ public enum ProductRole {
     Door_of_Depravity,
     Canopic_Chest_of_Oblivion,
     Arch_of_Mania,
-
     Blazing_Grail,
     Athanasia_Runes,
     Exiled_Statuette,
@@ -77,7 +71,6 @@ public enum ProductRole {
     Tiara_of_Shadows,
     Necklace_of_Justice,
     Mask_of_Metamorphosis,
-
     Thaumaturgy_Robes,
     Worship_Symbols,
     Equinox_Necklace,
@@ -88,7 +81,6 @@ public enum ProductRole {
     Band_of_Spite,
     Seal_of_Metamorphosis,
     Letters_of_Benediction,
-
     Philosopher_s_Box,
     Valor_Goblet,
     Venom_Chalice,
@@ -99,7 +91,6 @@ public enum ProductRole {
     Disc_of_Summoning,
     Gauntlet_of_Guardians,
     Circlet_of_Mending,
-
     Enigma_Horn,
     Spirit_Symbols,
     Insanity_Tiara,
@@ -110,7 +101,6 @@ public enum ProductRole {
     Cylinder_of_Metamorphosis,
     Staff_of_Betrayal,
     Disc_of_All_Seeing,
-
     Fire_Shield,
     Titan_Statuette,
     Purity_Canopic_Chest,
@@ -121,7 +111,6 @@ public enum ProductRole {
     Elixir_of_Massacres,
     Mask_of_Misery,
     Band_of_Evil,
-
     Death_s_Door,
     Misfortune_Cup,
     Summoning_Cylinder,
@@ -132,7 +121,6 @@ public enum ProductRole {
     Arch_of_Binding,
     Ring_of_Demons,
     Mantle_of_Immortality,
-
     Desire_s_Goblet,
     Wisdom_Hide,
     Valor_Crown,
@@ -143,7 +131,6 @@ public enum ProductRole {
     Skull_of_Divinity,
     Boots_of_the_Scourge,
     Chalice_of_Persecution,
-
     Wisdom_Cylinder,
     Destiny_s_Skull,
     Annihilation_Sandals,
@@ -154,7 +141,6 @@ public enum ProductRole {
     Disc_of_Sleep,
     Gem_of_Fortune,
     Tiara_of_Mending,
-
     Thaumaturgy_Microlith,
     Enigma_Circlet,
     Anarchy_Microlith,
@@ -165,7 +151,6 @@ public enum ProductRole {
     Cloak_of_the_Elements,
     Boots_of_Contagion,
     Grail_of_Worship,
-
     Nightmare_Grimoire,
     Anarchy_Ark,
     Annihilation_Mantle,
@@ -176,7 +161,6 @@ public enum ProductRole {
     Box_of_Desire,
     Root_of_Dementia,
     Instrument_of_Benediction,
-
     Maniacal_Bracelet,
     Resistance_Statue,
     Immortal_Stone,
@@ -187,7 +171,6 @@ public enum ProductRole {
     Staff_of_Darkness,
     Fountain_of_Immobilizing,
     Key_of_Vice,
-
     Damnation_Mask,
     Agony_Horn,
     Teleportation_Elixir,
@@ -198,7 +181,6 @@ public enum ProductRole {
     Runes_of_Riddles,
     Grimoire_of_Chaos,
     Chest_of_Enigmas,
-
     Hungering_Jar,
     Venom_Bracelet,
     Karma_Chalice,
@@ -209,7 +191,6 @@ public enum ProductRole {
     Statue_of_Demons,
     Microlith_of_Liberation,
     Canopic_Jar_of_Demons,
-
     Judgment_Key,
     Fate_s_Grail,
     Tranquility_Chest,
@@ -220,7 +201,6 @@ public enum ProductRole {
     Scroll_of_Radiance,
     Tablet_of_Genesis,
     Gem_of_Charming,
-
     Soul_Statue,
     Domination_Door,
     Blinding_Crown,
@@ -231,7 +211,6 @@ public enum ProductRole {
     Stone_of_Betrayal,
     Chest_of_Ice,
     Instrument_of_Sleep,
-
     Mirage_Statue,
     Truth_Inscriptions,
     Extinction_Rod,
@@ -242,7 +221,6 @@ public enum ProductRole {
     Cylinder_of_Enthrallment,
     Root_of_Spirits,
     Circlet_of_Binding,
-
     Domination_Hand,
     Teleporting_Goblet,
     Spirit_Microlith,
@@ -253,7 +231,6 @@ public enum ProductRole {
     Fruit_of_Oblivion,
     Feather_of_Contagion,
     Fruit_of_Valor,
-
     Bravery_Shard,
     Nightmare_Key,
     Divine_Root,
@@ -264,7 +241,6 @@ public enum ProductRole {
     Cube_of_Oblivion,
     Gauntlet_of_Misery,
     Horn_of_Birth,
-
     Dread_Staff,
     Fortitude_Cup,
     Spiritbound_Grail,
@@ -274,5 +250,5 @@ public enum ProductRole {
     Microlith_of_Scorching,
     Rod_of_Seduction,
     Circlet_of_Fear,
-    Goblet_of_Immortality,
+    Goblet_of_Immortality
 }

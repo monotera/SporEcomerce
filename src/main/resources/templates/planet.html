@@ -45,7 +45,27 @@
         <select name="create_product_id" id="create_product_id">
             <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.product_name}">test
             </option>
-        </select>
+        </select><br />
+        <label for="create_product_stock">Product stock</label>
+        <input id="create_product_stock" name="create_product_stock" type="text" /><br />
+        <label for="create_product_demand">Product demand</label>
+        <input id="create_product_demand" name="create_product_demand" type="text" /><br />
+        <label for="create_product_sale_price">Product sales price</label>
+        <input id="create_product_sale_price" name="create_product_sale_price" type="text" /><br />
+        <label for="create_product_offer">Product offer</label>
+        <input id="create_product_offer" name="create_product_offer" type="text" /><br />
+        <label for="create_product_purchase_price">Product purchase price</label>
+        <input id="create_product_purchase_price" name="create_product_purchase_price" type="text" /><br />
+        <label for="create_product_sp">Product SP</label>
+        <select name="create_product_sp" id="create_product_sp"><br />
+            <option value="true">true</option>
+            <option value="false">false</option>
+        </select><br />
+        <label for="create_product_pp">Product PP</label>
+        <select name="create_product_pp" id="create_product_pp">
+            <option value="true">true</option>
+            <option value="false">false</option>
+        </select><br />
 
         <button type="button" th:onClick="addProduct()">Send!</button>
     </form>
@@ -81,12 +101,43 @@
             planet_id = planet_id.options[planet_id.selectedIndex];
             let product_id = document.querySelector("#create_product_id")
             product_id = product_id.options[product_id.selectedIndex];
+            const product_stock = document.querySelector("#create_product_stock").value
+            const product_demand = document.querySelector("#create_product_demand").value
+            const product_sale_price = document.querySelector("#create_product_sale_price").value
+            const product_offer = document.querySelector("#create_product_offer").value
+            const product_purchase_price = document.querySelector("#create_product_purchase_price").value
+            let product_sp = document.querySelector("#create_product_sp");
+            product_sp = product_sp.options[product_sp.selectedIndex];
+            let product_pp = document.querySelector("#create_product_pp");
+            product_pp = product_pp.options[product_pp.selectedIndex];
             let url = `http://localhost:8080/planet/add-product?planet_id=${planet_id.value}&product_id=${product_id.value}`
 
-            fetch_product_method(url).then(data => {
+            fetch_add_product(url, product_stock, product_demand, product_sale_price, product_offer, product_purchase_price, product_sp.value, product_pp.value).then(data => {
                 p.innerHTML = ''
                 p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(data)}`
             })
+        }
+        const fetch_add_product = async (url, product_stock, product_demand, product_sale_price, product_offer, product_purchase_price, product_sp, product_pp) => {
+            let response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    demand: product_demand,
+                    sales_price: product_sale_price,
+                    offer: product_offer,
+                    purchase_price: product_purchase_price,
+                    stock: product_stock,
+                    sp_: product_sp,
+                    pp_: product_pp
+
+                })
+            })
+            if (response.status == 200)
+                alert("The product was add it")
+            return response.json();
         }
         const removeProduct = () => {
             let p = document.querySelector("#response");

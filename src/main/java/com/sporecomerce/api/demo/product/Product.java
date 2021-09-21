@@ -26,16 +26,8 @@ public class Product {
     private Long id;
 
     private String product_name;
-    private Integer stock;
     private double load_capacity;
 
-    private Integer demand;
-    private double sales_price;
-    private boolean SP_;
-
-    private Integer offer;
-    private double purchase_price;
-    private boolean PP_;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @JsonIgnore
@@ -48,18 +40,9 @@ public class Product {
     public Product() {
     }
 
-    public Product(String product_name, Integer stock, double load_capacity, Integer demand, double sales_price,
-            boolean SP_, Integer offer, double purchase_price, boolean PP_) {
-
+    public Product(String product_name, double load_capacity) {
         this.product_name = product_name;
-        this.stock = stock;
         this.load_capacity = load_capacity;
-        this.demand = demand;
-        this.sales_price = sales_price;
-        this.SP_ = SP_;
-        this.offer = offer;
-        this.purchase_price = purchase_price;
-        this.PP_ = PP_;
     }
 
     public Product(Long id){
@@ -82,14 +65,6 @@ public class Product {
         this.product_name = product_name;
     }
 
-    public Integer getStock() {
-        return stock;
-    }
-
-    public void setStock(Integer stock) {
-        this.stock = stock;
-    }
-
     public double getLoad_capacity() {
         return load_capacity;
     }
@@ -98,53 +73,6 @@ public class Product {
         this.load_capacity = load_capacity;
     }
 
-    public Integer getDemand() {
-        return demand;
-    }
-
-    public void setDemand(Integer demand) {
-        this.demand = demand;
-    }
-
-    public double getSales_price() {
-        return sales_price;
-    }
-
-    public void setSales_price(double sales_price) {
-        this.sales_price = sales_price;
-    }
-
-    public boolean isSP_() {
-        return SP_;
-    }
-
-    public void setSP_(boolean sP_) {
-        SP_ = sP_;
-    }
-
-    public Integer getOffer() {
-        return offer;
-    }
-
-    public void setOffer(Integer offer) {
-        this.offer = offer;
-    }
-
-    public double getPurchase_price() {
-        return purchase_price;
-    }
-
-    public void setPurchase_price(double purchase_price) {
-        this.purchase_price = purchase_price;
-    }
-
-    public boolean isPP_() {
-        return PP_;
-    }
-
-    public void setPP_(boolean pP_) {
-        PP_ = pP_;
-    }
 
     public Set<Productxcrew> getCrew() {
         return crew;

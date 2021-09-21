@@ -53,7 +53,7 @@ public class Crewmembers {
         this.credits = credits;
     }
 
-    public Crewmembers( String crew_name, Integer accTime, double credits, Spaceship space_crew,
+    public Crewmembers(String crew_name, Integer accTime, double credits, Spaceship space_crew,
             ArrayList<Player> player_list, Set<Productxcrew> products) {
         this.crew_name = crew_name;
         this.accTime = accTime;
@@ -144,8 +144,14 @@ public class Crewmembers {
         p.setCrewmembers(null);
     }
 
-    public void addProduct(Product p) {
+    public void addProduct(Product p, Integer stock, Integer demand, boolean sP_, Integer offer, boolean pP_) {
         Productxcrew pxc = new Productxcrew(p, this);
+        pxc.setStock(stock);
+        pxc.setDemand(demand);
+        pxc.setSP_(sP_);
+        pxc.setOffer(offer);
+        pxc.setPP_(pP_);
+        pxc.updatePrices();
         products.add(pxc);
         p.getCrew().add(pxc);
     }

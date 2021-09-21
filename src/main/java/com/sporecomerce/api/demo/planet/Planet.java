@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sporecomerce.api.demo.product.Product;
@@ -21,16 +19,13 @@ import com.sporecomerce.api.demo.star.Star;
 
 @Entity
 public class Planet {
-
     @Id
     @GeneratedValue
     private Long id;
     private String planet_name;
-
     @JsonManagedReference(value = "planet-pxp")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "planet")
     private Set<Productxplanet> product_list = new HashSet<>();
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference(value = "star-planet")
     private Star star;
@@ -79,8 +74,14 @@ public class Planet {
         this.star = star;
     }
 
-    public void addProduct(Product p) {
+    public void addProduct(Product p, Integer stock, Integer demand, boolean sP_, Integer offer, boolean pP_) {
         Productxplanet pxp = new Productxplanet(p, this);
+        pxp.setStock(stock);
+        pxp.setDemand(demand);
+        pxp.setSP_(sP_);
+        pxp.setOffer(offer);
+        pxp.setPP_(pP_);
+        pxp.updatePrices();
         product_list.add(pxp);
         p.getPlanets().add(pxp);
     }
@@ -102,5 +103,4 @@ public class Planet {
         // this.product_list = product_list;
         this.star = star;
     }
-
 }

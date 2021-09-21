@@ -56,8 +56,10 @@ public class PlanetController {
 
     // http://localhost:8080/planet/add-product?planet_id=15&product_id=35
     @PutMapping("/add-product")
-    public ResponseEntity<Planet> addProduct(@RequestParam Long planet_id, @RequestParam Long product_id) {
+    public ResponseEntity<Planet> addProduct(@RequestParam Long planet_id, @RequestParam Long product_id,
+            @RequestBody Productxplanet pxpNew) {
         try {
+            logger.info(pxpNew.toString());
             Boolean validation = true;
             Iterable<Productxplanet> pxp = productxplanetRepository.findAll();
             for (Productxplanet productxplanet : pxp) {
@@ -70,7 +72,8 @@ public class PlanetController {
                 return new ResponseEntity<>(null, null, HttpStatus.CONFLICT);
             Planet planet = planetRepository.findById(planet_id).get();
             Product product = productRepository.findById(product_id).get();
-            planet.addProduct(product);
+            planet.addProduct(product, pxpNew.getStock(), pxpNew.getDemand(), pxpNew.isSP_(),
+                    pxpNew.getOffer(), pxpNew.isPP_());
             planetRepository.save(planet);
             return new ResponseEntity<>(planet, null, HttpStatus.OK);
         } catch (Exception e) {

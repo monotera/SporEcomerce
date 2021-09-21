@@ -6,10 +6,11 @@ import java.util.Random;
 import com.sporecomerce.api.demo.planet.Planet;
 import com.sporecomerce.api.demo.planet.PlanetGenerator;
 import com.sporecomerce.api.demo.spaceship.Spaceship;
+import com.sporecomerce.api.demo.product.Product;
 
 public class StarGenerator {
     //Initial values
-    public Boolean initial(Star star, ArrayList<String> productNames, String star_id, Boolean habited, ArrayList<Star> star_list) {
+    public Boolean initial(Star star, ArrayList<Product> product_list, String star_id, Boolean habited, ArrayList<Star> star_list) {
         PlanetGenerator gP = new PlanetGenerator();
         Random random = new Random();
         int numPlanets = 0;
@@ -27,7 +28,7 @@ public class StarGenerator {
                  //idSet = 161201 for PLAnet + star_id + numPlanet
                  String id = "KL-161"+String.valueOf(star.getId())+String.valueOf(i);
                  p.setPlanet_name(id);
-                 gP.initial(p, productNames);
+                 gP.initial(p, product_list);
                  star.addPlanet(p);
              }
              sentry = true;
