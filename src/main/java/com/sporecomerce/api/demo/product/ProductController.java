@@ -73,18 +73,8 @@ public class ProductController {
             product.setId(product_id);
             if (product.getProduct_name() == null || product.getProduct_name() == "")
                 product.setProduct_name(oldProduct.getProduct_name());
-            if (product.getStock() == null)
-                product.setStock(oldProduct.getStock());
             if (product.getLoad_capacity() == 0.0)
                 product.setLoad_capacity(oldProduct.getLoad_capacity());
-            if (product.getDemand() == null)
-                product.setDemand(oldProduct.getDemand());
-            if (product.getSales_price() == 0.0)
-                product.setSales_price(oldProduct.getSales_price());
-            if (product.getOffer() == null)
-                product.setOffer(oldProduct.getOffer());
-            if (product.getPurchase_price() == 0.0)
-                product.setPurchase_price(oldProduct.getPurchase_price());
             productRepository.save(product);
 
             return new ResponseEntity<>(product, null, HttpStatus.OK);
@@ -128,9 +118,7 @@ public class ProductController {
     @PostMapping("")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         try {
-            if (product.getProduct_name() == null || product.getStock() == null || product.getLoad_capacity() == 0.0
-                    || product.getDemand() == null || product.getSales_price() == 0.0 || product.getOffer() == null
-                    || product.getPurchase_price() == 0.0)
+            if (product.getProduct_name() == null || product.getLoad_capacity() == 0.0)
                 return new ResponseEntity<>(null, null, HttpStatus.CONFLICT);
             productRepository.save(product);
             return new ResponseEntity<>(product, null, HttpStatus.OK);

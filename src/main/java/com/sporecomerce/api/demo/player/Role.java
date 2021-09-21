@@ -1,5 +1,5 @@
 package com.sporecomerce.api.demo.player;
 
 public enum Role {
-    PILOT, MERCHANT, CAPTAIN
+    CAPTAIN, PILOT, MERCHANT 
 }

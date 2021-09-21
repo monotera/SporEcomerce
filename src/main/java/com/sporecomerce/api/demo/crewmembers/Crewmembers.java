@@ -53,9 +53,8 @@ public class Crewmembers {
         this.credits = credits;
     }
 
-    public Crewmembers(long crew_id, String crew_name, Integer accTime, double credits, Spaceship space_crew,
+    public Crewmembers(String crew_name, Integer accTime, double credits, Spaceship space_crew,
             ArrayList<Player> player_list, Set<Productxcrew> products) {
-        this.id = crew_id;
         this.crew_name = crew_name;
         this.accTime = accTime;
         this.credits = credits;
@@ -145,8 +144,14 @@ public class Crewmembers {
         p.setCrewmembers(null);
     }
 
-    public void addProduct(Product p) {
+    public void addProduct(Product p, Integer stock, Integer demand, boolean sP_, Integer offer, boolean pP_) {
         Productxcrew pxc = new Productxcrew(p, this);
+        pxc.setStock(stock);
+        pxc.setDemand(demand);
+        pxc.setSP_(sP_);
+        pxc.setOffer(offer);
+        pxc.setPP_(pP_);
+        pxc.updatePrices();
         products.add(pxc);
         p.getCrew().add(pxc);
     }
@@ -154,7 +159,7 @@ public class Crewmembers {
     public void removeProduct(Product p) {
         for (Iterator<Productxcrew> iterator = products.iterator(); iterator.hasNext();) {
             Productxcrew pxc = iterator.next();
-            if (pxc.getCrew().equals(this) && pxc.getProduct().equals(p)) {
+            if (pxc.obtainCrew().equals(this) && pxc.getProduct().equals(p)) {
                 iterator.remove();
                 pxc.getProduct().getCrew().remove(pxc);
                 pxc.setCrew(null);

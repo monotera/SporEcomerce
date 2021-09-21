@@ -106,7 +106,8 @@ public class CrewmembersController {
     }
 
     @PutMapping("add-product")
-    public ResponseEntity<Crewmembers> addProduct(@RequestParam Long crew_id, @RequestParam Long product_id) {
+    public ResponseEntity<Crewmembers> addProduct(@RequestParam Long crew_id, @RequestParam Long product_id,
+            @RequestBody Productxcrew pxcNew) {
         try {
             Boolean validation = true;
             Crewmembers crew = crewmembersRepository.findById(crew_id).get();
@@ -114,18 +115,18 @@ public class CrewmembersController {
             logger.info(product.getProduct_name());
             if (crew == null || product == null)
                 return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
-
             Iterable<Productxcrew> pxc = productxcrewRepository.findAll();
             for (Productxcrew productxcrew : pxc) {
-                if (productxcrew.getCrew() != null && productxcrew.getProduct() != null) {
-                    if (productxcrew.getCrew().getId() == crew_id && productxcrew.getProduct().getId() == product_id)
+                if (productxcrew.obtainCrew() != null && productxcrew.getProduct() != null) {
+                    if (productxcrew.obtainCrew().getId() == crew_id && productxcrew.getProduct().getId() == product_id)
                         validation = false;
                 }
             }
-
             if (!validation)
                 return new ResponseEntity<>(null, null, HttpStatus.CONFLICT);
-            crew.addProduct(product);
+
+            crew.addProduct(product, pxcNew.getStock(), pxcNew.getDemand(), pxcNew.isSP_(), pxcNew.getOffer(),
+                    pxcNew.isPP_());
             crewmembersRepository.save(crew);
             return new ResponseEntity<>(crew, null, HttpStatus.OK);
         } catch (Exception e) {

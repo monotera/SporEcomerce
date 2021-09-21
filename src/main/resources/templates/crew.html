@@ -43,7 +43,7 @@
         <label for="up_crew_accTimee">Acc time</label>
         <input id="up_crew_accTimee" name="up_crew_accTimee" type="text" /><br />
         <label for="up__crew_credits">Crew credits</label>
-        <input id="up__crew_credits" name="up__crew_credits" type="text" /><br />
+        <input id="up_crew_credits" name="up_crew_credits" type="text" /><br />
         <button type="button" th:onClick="updateCrew()">Send!</button>
     </form>
     <h2>Add product</h2>
@@ -53,7 +53,22 @@
             <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.product_name}">test
             </option>
         </select>
-
+        <label for="create_product_stock">Product stock</label>
+        <input id="create_product_stock" name="create_product_stock" type="text" /><br />
+        <label for="create_product_demand">Product demand</label>
+        <input id="create_product_demand" name="create_product_demand" type="text" /><br />
+        <label for="create_product_offer">Product offer</label>
+        <input id="create_product_offer" name="create_product_offer" type="text" /><br />
+        <label for="create_product_sp">Product SP</label>
+        <select name="create_product_sp" id="create_product_sp"><br />
+            <option value="true">true</option>
+            <option value="false">false</option>
+        </select><br />
+        <label for="create_product_pp">Product PP</label>
+        <select name="create_product_pp" id="create_product_pp">
+            <option value="true">true</option>
+            <option value="false">false</option>
+        </select><br />
         <button type="button" th:onClick="addProduct()">Send!</button>
     </form>
 
@@ -112,9 +127,16 @@
             product_id = product_id.options[product_id.selectedIndex];
             let crew_id = document.querySelector("#crew_id");
             crew_id = crew_id.options[crew_id.selectedIndex];
+            const product_stock = document.querySelector("#create_product_stock").value
+            const product_demand = document.querySelector("#create_product_demand").value
+            const product_offer = document.querySelector("#create_product_offer").value
+            let product_sp = document.querySelector("#create_product_sp");
+            product_sp = product_sp.options[product_sp.selectedIndex];
+            let product_pp = document.querySelector("#create_product_pp");
+            product_pp = product_pp.options[product_pp.selectedIndex];
             let url = `http://localhost:8080/crew/add-product?crew_id=${crew_id.value}&product_id=${product_id.value}`
 
-            fetch_product_method(url).then(data => {
+            fetch_add_product(url, product_stock, product_demand, product_offer, product_sp.value, product_pp.value).then(data => {
                 p.innerHTML = ''
                 p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(data)}`
             })
@@ -132,7 +154,28 @@
                 p.innerHTML = `The Method was sucessfully called! <br/> this was the response: <br/> ${JSON.stringify(data)}`
             })
         }
+        const fetch_add_product = async (url, product_stock, product_demand, product_offer, product_sp, product_pp) => {
+            let response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    demand: product_demand,
+                    sales_price: 0,
+                    offer: product_offer,
+                    purchase_price: 0,
+                    stock: product_stock,
+                    sp_: product_sp,
+                    pp_: product_pp
 
+                })
+            })
+            if (response.status == 200)
+                alert("The product was add it")
+            return response.json();
+        }
         const fetch_product_method = async (url) => {
             let response = await fetch(url, { method: "PUT" });
             if (response.status == 500)
