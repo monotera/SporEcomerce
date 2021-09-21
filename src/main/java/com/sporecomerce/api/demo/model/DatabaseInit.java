@@ -43,7 +43,6 @@ public class DatabaseInit implements ApplicationRunner {
     private int nSpaceships;
     private int nPlayers;
 
-
     @Autowired
     StarRepository starRepository;
 
@@ -94,7 +93,6 @@ public class DatabaseInit implements ApplicationRunner {
         nPlayers = 10;
         ArrayList<Player> pl = generate_players(sc);
 
-
         for (Star s : st) {
             save_o(s);
             for (Planet s1 : s.getPlanetList()) {
@@ -115,9 +113,8 @@ public class DatabaseInit implements ApplicationRunner {
         }
 
     }
-    
 
-    private ArrayList<Product> generate_products_names(int n){
+    private ArrayList<Product> generate_products_names(int n) {
         ArrayList<Product> test = new ArrayList<>();
         Random random = new Random();
         Integer capacity = 30;
@@ -128,19 +125,19 @@ public class DatabaseInit implements ApplicationRunner {
             Product p = new Product();
             String name;
 
-            if(pro == 0)
+            if (pro == 0)
                 name = ProductRole.values()[cont].toString();
-            else 
-                name = ProductRole.values()[cont].toString() + "-0" +String.valueOf(pro);
-            
-            if(cont == 249){
+            else
+                name = ProductRole.values()[cont].toString() + "-0" + String.valueOf(pro);
+
+            if (cont == 249) {
                 cont = 0;
-                pro ++;
+                pro++;
             }
             p.setProduct_name(name);
-            p.setLoad_capacity(random.nextInt(capacity)/.8);
+            p.setLoad_capacity(random.nextInt(capacity) / .8);
 
-            cont ++;
+            cont++;
             test.add(p);
         }
         return test;
@@ -158,24 +155,24 @@ public class DatabaseInit implements ApplicationRunner {
             p.changeStar(st.get(random.nextInt(st.size())), null);
             c.initial(p, dir.toString(), i);
             test.add(p);
-            i ++;
+            i++;
         }
         return test;
     }
 
-    private ArrayList<Star> generate_stars(ArrayList<Product> productNames, GalaxyGraph spore){
+    private ArrayList<Star> generate_stars(ArrayList<Product> productNames, GalaxyGraph spore) {
         ArrayList<Star> test = new ArrayList<>();
         Random random = new Random();
         StarGenerator gS = new StarGenerator();
 
-        for(int i=0; i<nStars; i++){
+        for (int i = 0; i < nStars; i++) {
             String id = "XR-192" + String.valueOf(i);
             boolean habited = (random.nextInt(prob) == 0) ? true : false;
 
             Star e = new Star();
             gS.initial(e, productNames, id, habited, test);
-            
-            //spore.getGalaxyContent().add(e);
+
+            // spore.getGalaxyContent().add(e);
             test.add(e);
         }
 
@@ -186,7 +183,7 @@ public class DatabaseInit implements ApplicationRunner {
         ArrayList<Crewmembers> test = new ArrayList<>();
         CrewGenerator gC = new CrewGenerator();
 
-        for(int i=0; i<nCrewmembers; i++){
+        for (int i = 0; i < nCrewmembers; i++) {
             String id = "031805" + String.valueOf(i);
             Spaceship n = sp.get(i);
             Crewmembers t = new Crewmembers();
@@ -198,7 +195,7 @@ public class DatabaseInit implements ApplicationRunner {
         return test;
     }
 
-    private ArrayList<Player> generate_players(ArrayList<Crewmembers> sc){
+    private ArrayList<Player> generate_players(ArrayList<Crewmembers> sc) {
         ArrayList<Player> test = new ArrayList<>();
         PlayerGenerator gP = new PlayerGenerator();
         Random random = new Random();
@@ -207,12 +204,12 @@ public class DatabaseInit implements ApplicationRunner {
             for (int i = 0; i < nPlayers; i++) {
                 String id = "161201" + String.valueOf(i) + String.valueOf(c.getId());
                 Player p = new Player();
-                Role r = Role.values()[random.nextInt(2)+1];
-                
-                if(i == 0){
+                Role r = Role.values()[random.nextInt(2) + 1];
+
+                if (i == 0) {
                     r = Role.values()[0];
                 }
-                
+
                 gP.initial(p, id, r);
                 c.addPlayer(p);
 
@@ -223,33 +220,33 @@ public class DatabaseInit implements ApplicationRunner {
         return test;
     }
 
-    private Boolean save_o(Object obj){
+    private Boolean save_o(Object obj) {
         Boolean sentry = false;
-        if(obj.getClass().equals(Crewmembers.class)){
-            crewmembersRepository.save((Crewmembers)obj);
+        if (obj.getClass().equals(Crewmembers.class)) {
+            crewmembersRepository.save((Crewmembers) obj);
             sentry = true;
         }
-        if(obj.getClass().equals(Planet.class)){
-            planetRepository.save((Planet)obj);
+        if (obj.getClass().equals(Planet.class)) {
+            planetRepository.save((Planet) obj);
             sentry = true;
         }
-        if(obj.getClass().equals(Player.class)){
-            playerRepository.save((Player)obj);
+        if (obj.getClass().equals(Player.class)) {
+            playerRepository.save((Player) obj);
             sentry = true;
         }
-        if(obj.getClass().equals(Product.class)){
-            productRepository.save((Product)obj);
+        if (obj.getClass().equals(Product.class)) {
+            productRepository.save((Product) obj);
             sentry = true;
         }
-        if(obj.getClass().equals(Spaceship.class)){
-            spaceshipRepository.save((Spaceship)obj);
+        if (obj.getClass().equals(Spaceship.class)) {
+            spaceshipRepository.save((Spaceship) obj);
             sentry = true;
         }
-        if(obj.getClass().equals(Star.class)){
-            starRepository.save((Star)obj);
+        if (obj.getClass().equals(Star.class)) {
+            starRepository.save((Star) obj);
             sentry = true;
         }
-        
+
         return sentry;
     }
 

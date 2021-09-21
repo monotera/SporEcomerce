@@ -28,7 +28,6 @@ public class Product {
     private String product_name;
     private double load_capacity;
 
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     @JsonIgnore
     Set<Productxcrew> crew = new HashSet<>();
@@ -45,7 +44,7 @@ public class Product {
         this.load_capacity = load_capacity;
     }
 
-    public Product(Long id){
+    public Product(Long id) {
         this.id = id;
     }
 
@@ -72,7 +71,6 @@ public class Product {
     public void setLoad_capacity(double load_capacity) {
         this.load_capacity = load_capacity;
     }
-
 
     public Set<Productxcrew> getCrew() {
         return crew;
@@ -105,9 +103,9 @@ public class Product {
     public void removeCrewmember(Crewmembers c) {
         for (Iterator<Productxcrew> iterator = crew.iterator(); iterator.hasNext();) {
             Productxcrew pxp = iterator.next();
-            if (pxp.getProduct().equals(this) && pxp.getCrew().equals(c)) {
+            if (pxp.getProduct().equals(this) && pxp.obtainCrew().equals(c)) {
                 iterator.remove();
-                pxp.getCrew().getProducts().remove(pxp);
+                pxp.obtainCrew().getProducts().remove(pxp);
                 pxp.setCrew(null);
                 pxp.setProduct(null);
             }

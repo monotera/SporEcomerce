@@ -32,8 +32,8 @@ public class Productxcrew {
     private double purchase_price;
     private boolean PP_;
 
-
-    public Productxcrew(Long id, Product product, Crewmembers crewmembers, Integer stock, Integer demand, double sales_price, boolean SP_, Integer offer, double purchase_price, boolean PP_) {
+    public Productxcrew(Long id, Product product, Crewmembers crewmembers, Integer stock, Integer demand,
+            double sales_price, boolean SP_, Integer offer, double purchase_price, boolean PP_) {
         this.id = id;
         this.product = product;
         this.crewmembers = crewmembers;
@@ -45,7 +45,6 @@ public class Productxcrew {
         this.purchase_price = purchase_price;
         this.PP_ = PP_;
     }
-
 
     public Integer getStock() {
         return stock;
@@ -122,7 +121,7 @@ public class Productxcrew {
         this.product = product;
     }
 
-    public Crewmembers getCrew() {
+    public Crewmembers obtainCrew() {
         return crewmembers;
     }
 
@@ -143,27 +142,27 @@ public class Productxcrew {
         this.crewmembers = crewmembers;
     }
 
-    public Boolean updatePrices(){
+    public Boolean updatePrices() {
         Boolean sentry = false;
 
-        //If the product is to be sold
-        if(this.PP_){
-            this.purchase_price = offer/(1.0+stock);
+        // If the product is to be sold
+        if (this.PP_) {
+            this.purchase_price = offer / (1.0 + stock);
             sentry = true;
         }
 
-        //If the product is to be purchased
-        if(this.SP_){
-            this.sales_price = demand/(1.0+stock);
+        // If the product is to be purchased
+        if (this.SP_) {
+            this.sales_price = demand / (1.0 + stock);
             sentry = true;
         }
         return sentry;
     }
 
-    public boolean checkStock(){
+    public boolean checkStock() {
         Boolean sentry = false;
 
-        if(this.stock > 0){
+        if (this.stock > 0) {
             sentry = true;
         }
         return sentry;

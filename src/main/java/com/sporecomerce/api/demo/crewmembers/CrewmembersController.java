@@ -117,16 +117,16 @@ public class CrewmembersController {
                 return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
             Iterable<Productxcrew> pxc = productxcrewRepository.findAll();
             for (Productxcrew productxcrew : pxc) {
-                if (productxcrew.getCrew() != null && productxcrew.getProduct() != null) {
-                    if (productxcrew.getCrew().getId() == crew_id && productxcrew.getProduct().getId() == product_id)
+                if (productxcrew.obtainCrew() != null && productxcrew.getProduct() != null) {
+                    if (productxcrew.obtainCrew().getId() == crew_id && productxcrew.getProduct().getId() == product_id)
                         validation = false;
                 }
             }
             if (!validation)
                 return new ResponseEntity<>(null, null, HttpStatus.CONFLICT);
 
-            crew.addProduct(product, pxcNew.getStock(), pxcNew.getDemand(), pxcNew.isSP_(),
-                    pxcNew.getOffer(), pxcNew.isPP_());
+            crew.addProduct(product, pxcNew.getStock(), pxcNew.getDemand(), pxcNew.isSP_(), pxcNew.getOffer(),
+                    pxcNew.isPP_());
             crewmembersRepository.save(crew);
             return new ResponseEntity<>(crew, null, HttpStatus.OK);
         } catch (Exception e) {

@@ -159,7 +159,7 @@ public class Crewmembers {
     public void removeProduct(Product p) {
         for (Iterator<Productxcrew> iterator = products.iterator(); iterator.hasNext();) {
             Productxcrew pxc = iterator.next();
-            if (pxc.getCrew().equals(this) && pxc.getProduct().equals(p)) {
+            if (pxc.obtainCrew().equals(this) && pxc.getProduct().equals(p)) {
                 iterator.remove();
                 pxc.getProduct().getCrew().remove(pxc);
                 pxc.setCrew(null);
