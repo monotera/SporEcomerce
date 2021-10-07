@@ -35,7 +35,7 @@ public class PlayerController {
         return new ResponseEntity<>(response, null, HttpStatus.OK);
     }
 
-    @GetMapping("")
+    @GetMapping("/{id}")
     public ResponseEntity<Player> getPlayer(@RequestParam Long player_id) {
         try {
             Player player = playerRepository.findById(player_id).get();
