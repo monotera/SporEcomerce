@@ -8,6 +8,7 @@ import com.sporecomerce.api.demo.crewmembers.CrewmembersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,8 @@ public class PlayerController {
     CrewmembersRepository crewmembersRepository;
 
     @GetMapping("/players")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<ArrayList<Player>> getPLayers() {
         ArrayList<Player> response = new ArrayList<>();
         Iterable<Player> db = playerRepository.findAll();
@@ -36,6 +39,8 @@ public class PlayerController {
     }
 
     @GetMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Player> getPlayer(@RequestParam Long player_id) {
         try {
             Player player = playerRepository.findById(player_id).get();
@@ -48,6 +53,8 @@ public class PlayerController {
     }
 
     @PutMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Player> modPlayer(@RequestParam Long player_id, @RequestBody Player newPlayer) {
         try {
             Player player = playerRepository.findById(player_id).get();
@@ -67,6 +74,8 @@ public class PlayerController {
     }
 
     @PutMapping("/change_crew")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Player> changeCrew(@RequestParam Long player_id, @RequestParam Long crew_id) {
         try {
             Player player = playerRepository.findById(player_id).get();
@@ -85,6 +94,8 @@ public class PlayerController {
     }
 
     @PostMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Player> createPlayer(@RequestBody Player player) {
         try {
             if (player.getPlayer_name() == null || player.getPlayer_name() == "" || player.getPlayer_role() == null)
@@ -97,6 +108,8 @@ public class PlayerController {
     }
 
     @DeleteMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Player> deletePlayer(@RequestParam Long player_id) {
         try {
             Player player = playerRepository.findById(player_id).get();

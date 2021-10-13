@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +37,8 @@ public class PlanetController {
 
     // http://localhost:8080/planet/planets
     @GetMapping("/planets")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<ArrayList<Planet>> getPlanets() {
         ArrayList<Planet> response = new ArrayList<>();
         Iterable<Planet> planetsDB = planetRepository.findAll();
@@ -45,6 +48,8 @@ public class PlanetController {
 
     // http://localhost:8080/planet?planet_id=..
     @GetMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Planet> getPlanet(@RequestParam Long planet_id) {
         try {
             Planet planet = planetRepository.findById(planet_id).get();
@@ -56,6 +61,8 @@ public class PlanetController {
 
     // http://localhost:8080/planet/add-product?planet_id=15&product_id=35
     @PutMapping("/add-product")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Planet> addProduct(@RequestParam Long planet_id, @RequestParam Long product_id,
             @RequestBody Productxplanet pxpNew) {
         try {
@@ -72,8 +79,8 @@ public class PlanetController {
                 return new ResponseEntity<>(null, null, HttpStatus.CONFLICT);
             Planet planet = planetRepository.findById(planet_id).get();
             Product product = productRepository.findById(product_id).get();
-            planet.addProduct(product, pxpNew.getStock(), pxpNew.getDemand(), pxpNew.isSP_(),
-                    pxpNew.getOffer(), pxpNew.isPP_());
+            planet.addProduct(product, pxpNew.getStock(), pxpNew.getDemand(), pxpNew.isSP_(), pxpNew.getOffer(),
+                    pxpNew.isPP_());
             planetRepository.save(planet);
             return new ResponseEntity<>(planet, null, HttpStatus.OK);
         } catch (Exception e) {
@@ -84,6 +91,8 @@ public class PlanetController {
 
     // http://localhost:8080/planet/remove-product?planet_id=15&product_id=35
     @PutMapping("/remove-product")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Planet> removeProduct(@RequestParam Long planet_id, @RequestParam Long product_id) {
         try {
             Planet planet = planetRepository.findById(planet_id).get();
@@ -101,6 +110,8 @@ public class PlanetController {
     // localhost:8080/planet?planet_id=15
     // { "planet_name":"planert"}
     @PutMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Planet> modifyPlanet(@RequestBody Planet planet, @RequestParam Long planet_id) {
         try {
             Planet old_planet = planetRepository.findById(planet_id).get();
@@ -119,6 +130,8 @@ public class PlanetController {
     // localhost:8080/planet?planet_id=15
     // { "planet_name":"planert"}
     @PostMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Planet> createPlanet(@RequestBody Planet planet) {
         try {
             if (planet.getPlanet_name() == null || planet.getPlanet_name() == "")
@@ -132,6 +145,8 @@ public class PlanetController {
 
     // http://localhost:8080/planet?planet_id=15
     @DeleteMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Planet> removePlanet(@RequestParam Long planet_id) {
         try {
 

@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,6 +47,7 @@ public class CrewmembersController {
     Logger logger = LoggerFactory.getLogger(CrewmembersController.class);
 
     @GetMapping("/crews")
+    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<ArrayList<Crewmembers>> getCrew() {
         ArrayList<Crewmembers> response = new ArrayList<>();
         Iterable<Crewmembers> crewDB = crewmembersRepository.findAll();
@@ -55,6 +57,7 @@ public class CrewmembersController {
 
     // http://localhost:8080/crew?crew_id=9
     @GetMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<Crewmembers> getCrew(@RequestParam Long crew_id) {
         try {
             Crewmembers crew = crewmembersRepository.findById(crew_id).get();
@@ -67,6 +70,7 @@ public class CrewmembersController {
     }
 
     @PutMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<Crewmembers> modCrew(@RequestParam Long crew_id, @RequestBody Crewmembers crew) {
         try {
             Crewmembers oldCrew = crewmembersRepository.findById(crew_id).get();
@@ -89,6 +93,7 @@ public class CrewmembersController {
     }
 
     @PutMapping("/change-spaceship")
+    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<Crewmembers> changeSpaceship(@RequestParam Long crew_id, @RequestParam Long spaceship_id) {
         try {
             Crewmembers crew = crewmembersRepository.findById(crew_id).get();
@@ -106,6 +111,7 @@ public class CrewmembersController {
     }
 
     @PutMapping("add-product")
+    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<Crewmembers> addProduct(@RequestParam Long crew_id, @RequestParam Long product_id,
             @RequestBody Productxcrew pxcNew) {
         try {
@@ -136,6 +142,7 @@ public class CrewmembersController {
     }
 
     @PutMapping("remove-product")
+    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<Crewmembers> removeProduct(@RequestParam Long crew_id, @RequestParam Long product_id) {
         try {
             Crewmembers crew = crewmembersRepository.findById(crew_id).get();
@@ -152,6 +159,7 @@ public class CrewmembersController {
     }
 
     @PostMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<Crewmembers> createCrew(@RequestBody Crewmembers crew) {
         try {
             if (crew.getCrew_name() == null || crew.getAccTime() == null || crew.getCredits() < 0.0
@@ -167,6 +175,7 @@ public class CrewmembersController {
     }
 
     @DeleteMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<Crewmembers> deleteCrew(@RequestParam Long crew_id) {
         try {
 

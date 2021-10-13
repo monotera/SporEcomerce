@@ -71,17 +71,17 @@ public class DatabaseInit implements ApplicationRunner {
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
 
-        prob = 99;
+        prob = 100;
         GalaxyGraph spore = new GalaxyGraph();
 
-        nProducts = 500;
+        nProducts = 10;
         ArrayList<Product> pr = generate_products_names(nProducts);
 
         for (Product s : pr) {
             save_o(s);
         }
 
-        nStars = 40000;
+        nStars = 10;
         ArrayList<Star> st = generate_stars(pr, spore);
 
         nSpaceships = 20;

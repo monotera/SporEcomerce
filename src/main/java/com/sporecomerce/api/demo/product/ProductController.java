@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +37,8 @@ public class ProductController {
 
     // http://localhost:8080/product/products
     @GetMapping("/products")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<ArrayList<Product>> getProducts() {
         ArrayList<Product> response = new ArrayList<>();
         Iterable<Product> db = productRepository.findAll();
@@ -45,6 +48,8 @@ public class ProductController {
 
     // http://localhost:8080/product?product_id=..
     @GetMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Product> getProduct(@RequestParam Long product_id) {
         try {
             Product product = productRepository.findById(product_id).get();
@@ -63,6 +68,8 @@ public class ProductController {
      * "sp_": ..., "pp_": ... }
      */
     @PutMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Product> modProduct(@RequestBody Product product, @RequestParam Long product_id) {
         try {
             Product oldProduct = productRepository.findById(product_id).get();
@@ -85,6 +92,8 @@ public class ProductController {
 
     // http://localhost:8080/product?product_id=...
     @DeleteMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Product> deleteProduct(@RequestParam Long product_id) {
 
         try {
@@ -116,6 +125,8 @@ public class ProductController {
      * "pp_": false }
      */
     @PostMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         try {
             if (product.getProduct_name() == null || product.getLoad_capacity() == 0.0)

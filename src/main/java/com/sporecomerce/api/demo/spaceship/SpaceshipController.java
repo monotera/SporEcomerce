@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +33,8 @@ public class SpaceshipController {
 
     // http://localhost:8080/spaceship/spaceships
     @GetMapping("/spaceships")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<ArrayList<Spaceship>> getSpaceShips() {
         ArrayList<Spaceship> response = new ArrayList<>();
         Iterable<Spaceship> db = spaceshipRepository.findAll();
@@ -42,6 +44,8 @@ public class SpaceshipController {
 
     // http://localhost:8080/spaceship?spaceship_id=..
     @GetMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Spaceship> getSpaceship(@RequestParam Long spaceship_id) {
         try {
             Spaceship spaceship = spaceshipRepository.findById(spaceship_id).get();
@@ -55,6 +59,8 @@ public class SpaceshipController {
 
     // http://localhost:8080/spaceship?spaceship_id=..
     @PutMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Spaceship> modSpaceship(@RequestParam Long spaceship_id, @RequestBody Spaceship spaceship) {
         try {
             Spaceship oldSpaceship = spaceshipRepository.findById(spaceship_id).get();
@@ -80,6 +86,8 @@ public class SpaceshipController {
 
     // http://localhost:8080/spaceship
     @PostMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Spaceship> createSpaceship(@RequestBody Spaceship spaceship) {
         try {
             if (spaceship.getShip_name() == null || spaceship.getShip_load() == 0.0 || spaceship.getVelocity() == 0.0)
@@ -95,6 +103,8 @@ public class SpaceshipController {
 
     // http://localhost:8080/spaceship/move_ship?spaceship_id=..&star_id=..
     @PutMapping("/move_ship")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Spaceship> moveSpaceship(@RequestParam Long spaceship_id, @RequestParam Long star_id) {
         try {
             Star star = starRepository.findById(star_id).get();
@@ -112,6 +122,8 @@ public class SpaceshipController {
 
     // http://localhost:8080/spaceship?spaceship_id=..
     @DeleteMapping("")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Spaceship> deleteSpaceship(@RequestParam Long spaceship_id) {
         try {
             Spaceship spaceship = spaceshipRepository.findById(spaceship_id).get();
