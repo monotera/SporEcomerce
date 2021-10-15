@@ -71,7 +71,7 @@ public class DatabaseInit implements ApplicationRunner {
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
 
-        prob = 100;
+        prob = 1;
         GalaxyGraph spore = new GalaxyGraph();
 
         nProducts = 10;

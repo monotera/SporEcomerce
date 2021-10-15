@@ -145,15 +145,34 @@ public class Crewmembers {
     }
 
     public void addProduct(Product p, Integer stock, Integer demand, boolean sP_, Integer offer, boolean pP_) {
-        Productxcrew pxc = new Productxcrew(p, this);
-        pxc.setStock(stock);
-        pxc.setDemand(demand);
-        pxc.setSP_(sP_);
-        pxc.setOffer(offer);
-        pxc.setPP_(pP_);
-        pxc.updatePrices();
-        products.add(pxc);
-        p.getCrew().add(pxc);
+        boolean exists = false;
+        Productxcrew pxc = new Productxcrew();
+        for (Productxcrew temp : products) {
+            if (temp.getProduct().getId() == p.getId()) {
+                exists = true;
+                pxc = temp;
+                break;
+            }
+        }
+        if (!exists) {
+            pxc = new Productxcrew(p, this);
+            pxc.setStock(stock);
+            pxc.setDemand(demand);
+            pxc.setSP_(sP_);
+            pxc.setOffer(offer);
+            pxc.setPP_(pP_);
+            pxc.updatePrices();
+            products.add(pxc);
+            p.getCrew().add(pxc);
+        } else {
+            pxc.setStock(pxc.getStock() + stock);
+            pxc.setDemand(demand);
+            pxc.setSP_(sP_);
+            pxc.setOffer(offer);
+            pxc.setPP_(pP_);
+            pxc.updatePrices();
+        }
+
     }
 
     public void removeProduct(Product p) {
