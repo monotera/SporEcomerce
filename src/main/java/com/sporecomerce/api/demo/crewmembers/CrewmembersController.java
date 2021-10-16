@@ -150,7 +150,7 @@ public class CrewmembersController {
             logger.info(product.getProduct_name());
             if (crew == null || product == null)
                 return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
-            crew.removeProduct(product);
+            crew.removeProduct(product, -1);
             crewmembersRepository.save(crew);
             return new ResponseEntity<>(crew, null, HttpStatus.OK);
         } catch (Exception e) {
@@ -184,7 +184,7 @@ public class CrewmembersController {
                 return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
             Iterable<Product> products = productRepository.findAll();
             products.forEach(product -> {
-                crew.removeProduct(product);
+                crew.removeProduct(product, -1);
             });
             Iterable<Player> players = playerRepository.findAll();
             players.forEach(player -> {

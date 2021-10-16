@@ -175,16 +175,30 @@ public class Crewmembers {
 
     }
 
-    public void removeProduct(Product p) {
+    public void removeProduct(Product p, Integer amount) {
         for (Iterator<Productxcrew> iterator = products.iterator(); iterator.hasNext();) {
             Productxcrew pxc = iterator.next();
             if (pxc.obtainCrew().equals(this) && pxc.getProduct().equals(p)) {
-                iterator.remove();
-                pxc.getProduct().getCrew().remove(pxc);
-                pxc.setCrew(null);
-                pxc.setProduct(null);
+                if (pxc.getStock() == amount || amount == -1) {
+                    iterator.remove();
+                    pxc.getProduct().getCrew().remove(pxc);
+                    pxc.setCrew(null);
+                    pxc.setProduct(null);
+                } else {
+                    pxc.setStock(pxc.getStock() - amount);
+                    pxc.updatePrices();
+                }
             }
         }
+    }
+
+    public Productxcrew getProduct(Long product_id) {
+        for (Productxcrew productxcrew : products) {
+            if (productxcrew.getProduct().getId() == product_id) {
+                return productxcrew;
+            }
+        }
+        return null;
     }
 
     @Override
