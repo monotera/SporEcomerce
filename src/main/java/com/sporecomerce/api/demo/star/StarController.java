@@ -1,7 +1,9 @@
 package com.sporecomerce.api.demo.star;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.sporecomerce.api.demo.galaxy.GalaxyGraphService;
 import com.sporecomerce.api.demo.planet.Planet;
 import com.sporecomerce.api.demo.planet.PlanetRepository;
 import com.sporecomerce.api.demo.spaceship.Spaceship;
@@ -34,6 +36,8 @@ public class StarController {
     @Autowired
     SpaceshipRepository spaceshipRepository;
 
+    GalaxyGraphService galaxyGraphService = new GalaxyGraphService();
+
     Logger logger = LoggerFactory.getLogger(StarController.class);
 
     // http://localhost:8080/star/stars
@@ -45,6 +49,11 @@ public class StarController {
         Iterable<Star> starsI = starRepository.findAll();
         starsI.forEach(response::add);
         return new ResponseEntity<>(response, null, HttpStatus.OK);
+    }
+
+    @GetMapping("test")
+    public List<List<Integer>> test() {
+        return galaxyGraphService.getGraph();
     }
 
     // http://localhost:8080/star?id=...

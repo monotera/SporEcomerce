@@ -9,6 +9,7 @@ import com.sporecomerce.api.demo.crewmembers.CrewGenerator;
 import com.sporecomerce.api.demo.crewmembers.Crewmembers;
 import com.sporecomerce.api.demo.crewmembers.CrewmembersRepository;
 import com.sporecomerce.api.demo.galaxy.GalaxyGraph;
+import com.sporecomerce.api.demo.galaxy.GalaxyGraphService;
 import com.sporecomerce.api.demo.planet.Planet;
 import com.sporecomerce.api.demo.planet.PlanetRepository;
 import com.sporecomerce.api.demo.player.Player;
@@ -42,6 +43,7 @@ public class DatabaseInit implements ApplicationRunner {
     private int nCrewmembers;
     private int nSpaceships;
     private int nPlayers;
+    private GalaxyGraphService galaxyGraphService;
 
     @Autowired
     StarRepository starRepository;
@@ -71,7 +73,10 @@ public class DatabaseInit implements ApplicationRunner {
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
 
-        prob = 100;
+        galaxyGraphService = new GalaxyGraphService();
+        galaxyGraphService.generateGalaxy();
+        galaxyGraphService.printGraph();
+        prob = 99;
         GalaxyGraph spore = new GalaxyGraph();
 
         nProducts = 10;
