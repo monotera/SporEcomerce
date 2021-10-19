@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -142,6 +143,17 @@ public class Crewmembers {
     public void removePlayer(Player p) {
         player_list.remove(p);
         p.setCrewmembers(null);
+    }
+
+    public double calculateAvaliableCapacity() {
+        Double localLoad = 0.0;
+        for (Productxcrew pxp : products) {
+            localLoad += pxp.getProduct().getLoad_capacity() * pxp.getStock();
+        }
+        if (this.space_crew.getShip_load() - localLoad < 0)
+            return 0.0;
+
+        return this.space_crew.getShip_load() - localLoad;
     }
 
     public void addProduct(Product p, Integer stock, Integer demand, boolean sP_, Integer offer, boolean pP_) {

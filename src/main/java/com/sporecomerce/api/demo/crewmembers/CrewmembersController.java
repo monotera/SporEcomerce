@@ -55,6 +55,17 @@ public class CrewmembersController {
         return new ResponseEntity<>(response, null, HttpStatus.OK);
     }
 
+    @GetMapping("/load-capacity")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<Double> getLoad(@RequestParam Long crew_id) {
+        try {
+            Crewmembers crew = crewmembersRepository.findById(crew_id).orElseThrow();
+            return new ResponseEntity<>(crew.calculateAvaliableCapacity(), null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     // http://localhost:8080/crew?crew_id=9
     @GetMapping("")
     @CrossOrigin(origins = "http://localhost:4200")

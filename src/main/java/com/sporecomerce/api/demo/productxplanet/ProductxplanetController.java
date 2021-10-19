@@ -33,7 +33,9 @@ public class ProductxplanetController {
         Productxplanet pxp = productxplanetRepository.findById(pxp_id).orElseThrow();
         Crewmembers crew = crewmembersRepository.findById(crew_id).orElseThrow();
         Double priceToPay = amountProducts * pxp.getSales_price();
-        if (pxp.getStock() < amountProducts || crew.getCredits() < priceToPay) {
+        Double availableCapacity = crew.calculateAvaliableCapacity();
+        Double neededCapacity = pxp.getProduct().getLoad_capacity() * amountProducts;
+        if (pxp.getStock() < amountProducts || crew.getCredits() < priceToPay || availableCapacity < neededCapacity) {
             return new ResponseEntity<>(null, null, HttpStatus.NOT_MODIFIED);
         }
         pxp.setStock(pxp.getStock() - amountProducts);
@@ -54,7 +56,8 @@ public class ProductxplanetController {
         Productxcrew pxc = productxcrewRepository.findById(pxc_id).orElseThrow();
         Crewmembers crew = pxc.getCrewmembers();
 
-        if (pxc.getStock() < amountProducts) {
+        if (pxc.getStock() < amountProducts
+                || crew.calculateAvaliableCapacity() < pxp.getProduct().getLoad_capacity()) {
             return new ResponseEntity<>(null, null, HttpStatus.NOT_MODIFIED);
         }
 
