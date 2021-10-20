@@ -1,5 +1,7 @@
 package com.sporecomerce.api.demo.galaxy;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +13,14 @@ import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.lang.reflect.Type;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+
+import antlr.collections.impl.LList;
+
 public class GalaxyGraphService {
 
     private GalaxyGraph galaxy = new GalaxyGraph();
@@ -21,6 +31,18 @@ public class GalaxyGraphService {
         while (!isConnected()) {
             generateGraph();
         }
+    }
+
+    public void uploadGalaxy() {
+        this.galaxy.fillGraph(getGraph());
+    }
+
+    public GalaxyGraph getGalaxy() {
+        return galaxy;
+    }
+
+    public List<Integer> getConnections(Integer starIndex) {
+        return galaxy.getAdjacencyList().get(starIndex);
     }
 
     public void generateGraph() {
@@ -145,32 +167,32 @@ public class GalaxyGraphService {
     }
 
     public void printGraph() {
+        Gson prettyGson = new GsonBuilder().setPrettyPrinting().create();
+        String prettyJson = prettyGson.toJson(galaxy.getAdjacencyList());
         try {
-            FileWriter myWriter = new FileWriter("graph.txt");
-            System.out.println("Successfully wrote to the file.");
-            for (int i = 0; i < galaxy.getAdjacencyList().size(); i++) {
-                String aux = Integer.toString(i) + "-> {";
-                myWriter.write(aux);
-
-                List<Integer> list = galaxy.getAdjacencyList().get(i);
-
-                if (list.isEmpty())
-                    myWriter.write("No adjacent vertices");
-
-                else {
-                    int size = list.size();
-                    for (int j = 0; j < size; j++) {
-                        aux = Integer.toString(list.get(j));
-                        myWriter.write(aux);
-                        if (j < size - 1)
-                            myWriter.write(" , ");
-                    }
-                }
-                myWriter.write("}\n");
-            }
-            myWriter.close();
+            FileWriter fr = new FileWriter("graph.json");
+            fr.write(prettyJson);
+            fr.close();
         } catch (IOException e) {
-            System.err.println(e);
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
+
+    public List<List<Integer>> getGraph() {
+        Type graphListType = new TypeToken<List<List<Integer>>>() {
+        }.getType();
+
+        JsonReader graphData;
+        Gson gson = new Gson();
+        try {
+            graphData = new JsonReader(new FileReader("graph.json"));
+            List<List<Integer>> graph = gson.fromJson(graphData, graphListType);
+            return graph;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
