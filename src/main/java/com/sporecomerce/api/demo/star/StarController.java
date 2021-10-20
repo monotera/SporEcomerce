@@ -54,6 +54,7 @@ public class StarController {
     }
 
     @GetMapping("/near-stars")
+    @CrossOrigin(origins = "http://localhost:4200")
     public ArrayList<Star> test(@RequestParam Long id) {
         try {
             ArrayList<Star> stars = new ArrayList<>();
