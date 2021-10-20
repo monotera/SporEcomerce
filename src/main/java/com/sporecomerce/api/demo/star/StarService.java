@@ -1,42 +1,84 @@
 package com.sporecomerce.api.demo.star;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.sporecomerce.api.demo.galaxy.GalaxyGraphService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StarService {
-    private ArrayList<Star> stars = new ArrayList<>();
+    @Autowired
+    StarRepository starRepository;
     private HashMap<Integer, Double> nearStars = new HashMap<>();
-
-    public StarService(ArrayList<Star> stars) {
-        this.stars = stars;
-    }
+    private GalaxyGraphService galaxyGraphService = new GalaxyGraphService();
+    public Logger logger = LoggerFactory.getLogger(StarService.class);
 
     // ------------------------------------------------------------------------
-    public void findNearStars(Star star) {
-
+    // TODO: Change
+    public String findNearStars(Star star, ArrayList<Star> stars) {
+        galaxyGraphService.uploadGalaxy();
+        List<List<Integer>> graph = galaxyGraphService.getGraph();
         if (!star.getNearStars().isEmpty())
-            return;
-        double distancia;
-        Star starAux;
-        for (int i = 0; i < stars.size(); i++) {
-            starAux = stars.get(i);
-            distancia = distFunction(star.getX(), star.getY(), star.getZ(), starAux.getX(), starAux.getY(),
-                    starAux.getZ());
-            nearStars.put(i, distancia);
+            return star.getNearStars();
+
+        int index = 0;
+
+        for (Star s : stars) {
+            if (s.getId() == star.getId())
+                break;
+            index++;
         }
-        nearStars = sortByValue(nearStars);
-        star.setNearStars(set10Nearest());
-        star.setNearStars(sortByValue(star.getNearStars()));
-        printMap(star.getNearStars());
+
+        List<Integer> conections = graph.get(index);
+        logger.info(String.valueOf(conections.size()));
+        String nearStars = "";
+
+        for (int i = 0; i < 10 && i < conections.size(); i++) {
+            Long tempStar = stars.get(conections.get(i)).getId();
+            nearStars = nearStars + "," + String.valueOf(tempStar);
+        }
+
+        return nearStars;
+    }
+
+    public ArrayList<Star> transformIdToStar(Star star, ArrayList<Star> stars) {
+        try {
+            ArrayList<Star> Nearstars = new ArrayList<>();
+            String ids = star.getNearStars().substring(1);
+            List<String> items = new ArrayList<String>(Arrays.asList(ids.split(",")));
+
+            ArrayList<Long> idsL = new ArrayList<>();
+            items.forEach(id -> {
+                Long temp = Long.parseLong(id);
+                logger.info(String.valueOf(temp));
+                idsL.add(temp);
+            });
+            logger.info("****************");
+            for (Long id : idsL) {
+                for (Star s : stars) {
+                    if (s.getId() == id) {
+                        Nearstars.add(s);
+                        break;
+                    }
+                }
+            }
+
+            return Nearstars;
+
+        } catch (Exception e) {
+            // TODO: handle exception
+            logger.info(e.toString());
+            return null;
+        }
 
     }
 
@@ -45,44 +87,6 @@ public class StarService {
             System.out.println(entry.getKey() + " : " + entry.getValue());
         });
 
-    }
-
-    public HashMap<Integer, Double> set10Nearest() {
-        HashMap<Integer, Double> auxMap = new HashMap<>();
-        int i = 0;
-        for (Map.Entry<Integer, Double> e : nearStars.entrySet()) {
-            if (i != 0) {
-                auxMap.put(e.getKey(), e.getValue());
-            }
-            if (i >= 10)
-                break;
-            i++;
-        }
-        return auxMap;
-    }
-
-    public double distFunction(int x1, int y1, int z1, int x2, int y2, int z2) {
-        int eq1 = (int) Math.pow(x1 - x2, 2);
-        int eq2 = (int) Math.pow(y1 - y2, 2);
-        int eq3 = (int) Math.pow(z1 - z2, 2);
-        return Math.sqrt(eq1 + eq2 + eq3);
-    }
-
-    public static HashMap<Integer, Double> sortByValue(HashMap<Integer, Double> hm) {
-        List<Map.Entry<Integer, Double>> list = new LinkedList<Map.Entry<Integer, Double>>(hm.entrySet());
-
-        Collections.sort(list, new Comparator<Map.Entry<Integer, Double>>() {
-            public int compare(Map.Entry<Integer, Double> o1, Map.Entry<Integer, Double> o2) {
-                return (o1.getValue()).compareTo(o2.getValue());
-            }
-        });
-
-        // put data from sorted list to hashmap
-        HashMap<Integer, Double> temp = new LinkedHashMap<Integer, Double>();
-        for (Map.Entry<Integer, Double> aa : list) {
-            temp.put(aa.getKey(), aa.getValue());
-        }
-        return temp;
     }
 
     public StarService() {
