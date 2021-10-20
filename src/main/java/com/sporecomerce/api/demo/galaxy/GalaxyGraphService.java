@@ -33,6 +33,18 @@ public class GalaxyGraphService {
         }
     }
 
+    public void uploadGalaxy() {
+        this.galaxy.fillGraph(getGraph());
+    }
+
+    public GalaxyGraph getGalaxy() {
+        return galaxy;
+    }
+
+    public List<Integer> getConnections(Integer starIndex) {
+        return galaxy.getAdjacencyList().get(starIndex);
+    }
+
     public void generateGraph() {
         for (int i = 0; i < galaxy.getEdges(); i++) {
 
@@ -183,33 +195,4 @@ public class GalaxyGraphService {
         return null;
     }
 
-    public void printGraph2() {
-        try {
-            FileWriter myWriter = new FileWriter("graph.txt");
-            System.out.println("Successfully wrote to the file.");
-            for (int i = 0; i < galaxy.getAdjacencyList().size(); i++) {
-                String aux = Integer.toString(i) + "-> {";
-                myWriter.write(aux);
-
-                List<Integer> list = galaxy.getAdjacencyList().get(i);
-
-                if (list.isEmpty())
-                    myWriter.write("No adjacent vertices");
-
-                else {
-                    int size = list.size();
-                    for (int j = 0; j < size; j++) {
-                        aux = Integer.toString(list.get(j));
-                        myWriter.write(aux);
-                        if (j < size - 1)
-                            myWriter.write(" , ");
-                    }
-                }
-                myWriter.write("}\n");
-            }
-            myWriter.close();
-        } catch (IOException e) {
-            System.err.println(e);
-        }
-    }
 }

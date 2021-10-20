@@ -38,6 +38,8 @@ public class StarController {
 
     GalaxyGraphService galaxyGraphService = new GalaxyGraphService();
 
+    StarService starService = new StarService();
+
     Logger logger = LoggerFactory.getLogger(StarController.class);
 
     // http://localhost:8080/star/stars
@@ -51,9 +53,22 @@ public class StarController {
         return new ResponseEntity<>(response, null, HttpStatus.OK);
     }
 
-    @GetMapping("test")
-    public List<List<Integer>> test() {
-        return galaxyGraphService.getGraph();
+    @GetMapping("/near-stars")
+    public ArrayList<Star> test(@RequestParam Long id) {
+        try {
+            ArrayList<Star> stars = new ArrayList<>();
+            Iterable<Star> starsTemp = starRepository.findAll();
+            starsTemp.forEach(stars::add);
+            Star star = starRepository.findById(id).orElseThrow();
+            star.setNearStars(starService.findNearStars(star, stars));
+            starRepository.save(star);
+            return starService.transformIdToStar(star, stars);
+        } catch (Exception e) {
+            // TODO: handle exception
+            logger.info(e.toString());
+            return null;
+        }
+
     }
 
     // http://localhost:8080/star?id=...

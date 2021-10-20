@@ -1,7 +1,6 @@
 package com.sporecomerce.api.demo.star;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -10,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sporecomerce.api.demo.planet.Planet;
@@ -27,10 +25,10 @@ public class Star {
     private int y;
     private int z;
     private String name;
-    @Transient
-    private HashMap<Integer, Double> nearStars = new HashMap<>();
-    private Boolean isInHabited;
+    // TODO:Solo guarda los indices
 
+    private Boolean isInHabited;
+    private String nearStars = "";
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "star")
     @JsonManagedReference(value = "star-spaceship")
     private List<Spaceship> spaceLobby = new ArrayList<>();
@@ -83,11 +81,11 @@ public class Star {
         this.name = name;
     }
 
-    public HashMap<Integer, Double> getNearStars() {
+    public String getNearStars() {
         return nearStars;
     }
 
-    public void setNearStars(HashMap<Integer, Double> nearStars) {
+    public void setNearStars(String nearStars) {
         this.nearStars = nearStars;
     }
 
@@ -153,36 +151,35 @@ public class Star {
         this.id = id;
     }
 
-    public void validateStar(ArrayList<Star> star_list){
+    public void validateStar(ArrayList<Star> star_list) {
         Random random = new Random();
         Integer bound = 300;
         Boolean sentry1 = true;
 
-        while(sentry1){
+        while (sentry1) {
             sentry1 = false;
 
             this.x = random.nextInt(bound);
             this.y = random.nextInt(bound);
             this.z = random.nextInt(bound);
 
-
             for (Star s : star_list) {
-                if((s.getX() == this.x) && (s.getY() == this.y) && (s.getZ() == this.z)){
+                if ((s.getX() == this.x) && (s.getY() == this.y) && (s.getZ() == this.z)) {
                     sentry1 = true;
                 }
             }
         }
     }
 
-    public Boolean validateCreateStar(ArrayList<Star> star_list){
+    public Boolean validateCreateStar(ArrayList<Star> star_list) {
         Boolean sentry1 = true;
 
         for (Star s : star_list) {
-            if((s.getX() == this.x) && (s.getY() == this.y) && (s.getZ() == this.z)){
+            if ((s.getX() == this.x) && (s.getY() == this.y) && (s.getZ() == this.z)) {
                 sentry1 = false;
             }
         }
-        
+
         return sentry1;
     }
 

@@ -4,11 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.sporecomerce.api.demo.star.Star;
-
 public class GalaxyGraph {
-
-    private long galaxy_id;
 
     private int vertices;
     private int edges;
@@ -16,8 +12,8 @@ public class GalaxyGraph {
     // Aumentar el numero si se desea mas caminos usando la ecuacion
     // MAX_EDGES * ((MAX_EDGES-1)/2)
     // entre mas grande MAX_EDGES mas facil el juego
-    private final int MAX_EDGES = 400;
-    private final int MAX_VERTICES = 4000;
+    private final int MAX_EDGES = 4000;
+    private final int MAX_VERTICES = 40000;
 
     private Random random = new Random();
 
@@ -25,6 +21,14 @@ public class GalaxyGraph {
 
     public List<List<Integer>> getAdjacencyList() {
         return adjacencyList;
+    }
+
+    public GalaxyGraph(List<List<Integer>> adjacencyList) {
+        this.adjacencyList = adjacencyList;
+    }
+
+    public void fillGraph(List<List<Integer>> adjacencyList) {
+        this.adjacencyList = adjacencyList;
     }
 
     public List<Integer> getStarCopnnections(Integer starIndex) {
@@ -85,14 +89,6 @@ public class GalaxyGraph {
 
     int computeMaxEdges(int numOfVertices) {
         return numOfVertices * ((numOfVertices - 1) / 2);
-    }
-
-    public long getGalaxy_id() {
-        return this.galaxy_id;
-    }
-
-    public void setGalaxy_id(long galaxy_id) {
-        this.galaxy_id = galaxy_id;
     }
 
 }
