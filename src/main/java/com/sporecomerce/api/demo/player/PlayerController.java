@@ -52,6 +52,16 @@ public class PlayerController {
         }
     }
 
+    @GetMapping("/theplayer")
+    @CrossOrigin(origins = "http://localhost:4200")
+
+    public ResponseEntity<Player> getPlayer(){
+        Iterable<Player> players = playerRepository.findAll();
+        ArrayList<Player> listPlayers = new ArrayList<>();
+        players.forEach(listPlayers::add);
+        return new ResponseEntity<>(listPlayers.get(0), null, HttpStatus.OK);
+    }
+
     @PutMapping("")
     @CrossOrigin(origins = "http://localhost:4200")
 
