@@ -76,7 +76,7 @@ public class DatabaseInit implements ApplicationRunner {
         galaxyGraphService = new GalaxyGraphService();
         galaxyGraphService.generateGalaxy();
         galaxyGraphService.printGraph();
-        prob = 99;
+        prob = 2;
         GalaxyGraph spore = new GalaxyGraph();
 
         nProducts = 500;
@@ -86,7 +86,7 @@ public class DatabaseInit implements ApplicationRunner {
             save_o(s);
         }
 
-        nStars = 40000;
+        nStars = 40;
         ArrayList<Star> st = generate_stars(pr, spore);
 
         nSpaceships = 20;

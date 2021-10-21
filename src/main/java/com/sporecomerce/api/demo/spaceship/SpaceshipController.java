@@ -31,6 +31,8 @@ public class SpaceshipController {
     StarRepository starRepository;
     Logger logger = LoggerFactory.getLogger(SpaceshipController.class);
 
+    SpaceshipService spaceshipService = new SpaceshipService();
+
     // http://localhost:8080/spaceship/spaceships
     @GetMapping("/spaceships")
     @CrossOrigin(origins = "http://localhost:4200")
@@ -78,6 +80,38 @@ public class SpaceshipController {
                 spaceship.setVelocity(oldSpaceship.getShip_load());
             spaceshipRepository.save(spaceship);
             return new ResponseEntity<>(spaceship, null, HttpStatus.OK);
+        } catch (Exception e) {
+
+            return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/ship-star")
+    public ResponseEntity<Star> getShipStar(@RequestParam Long ship_id) {
+        try {
+            Spaceship spaceship = spaceshipRepository.findById(ship_id).orElseThrow();
+            Iterable<Star> tempStars = starRepository.findAll();
+            ArrayList<Star> stars = new ArrayList<>();
+            tempStars.forEach(stars::add);
+            Star actualStar = spaceshipService.findShipStar(spaceship, stars);
+            if (actualStar == null)
+                return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(actualStar, null, HttpStatus.OK);
+        } catch (Exception e) {
+
+            return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @PutMapping("Move-ship")
+    public ResponseEntity<Star> moveShip(@RequestParam Long star_origin_id, @RequestParam Long star_des_id,
+            @RequestParam Long ship_id) {
+        try {
+            Spaceship spaceship = spaceshipRepository.findById(ship_id).orElseThrow();
+            Star origin_star = starRepository.findById(star_origin_id).orElseThrow();
+
+            return new ResponseEntity<>(origin_star, null, HttpStatus.OK);
         } catch (Exception e) {
 
             return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);

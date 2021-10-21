@@ -6,6 +6,7 @@ import java.util.List;
 import com.sporecomerce.api.demo.galaxy.GalaxyGraphService;
 import com.sporecomerce.api.demo.planet.Planet;
 import com.sporecomerce.api.demo.planet.PlanetRepository;
+import com.sporecomerce.api.demo.player.PlayerRepository;
 import com.sporecomerce.api.demo.spaceship.Spaceship;
 import com.sporecomerce.api.demo.spaceship.SpaceshipRepository;
 

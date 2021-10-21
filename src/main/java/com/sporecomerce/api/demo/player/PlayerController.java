@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.sporecomerce.api.demo.crewmembers.Crewmembers;
 import com.sporecomerce.api.demo.crewmembers.CrewmembersRepository;
+import com.sporecomerce.api.demo.star.Star;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,7 +56,7 @@ public class PlayerController {
     @GetMapping("/theplayer")
     @CrossOrigin(origins = "http://localhost:4200")
 
-    public ResponseEntity<Player> getPlayer(){
+    public ResponseEntity<Player> getPlayer() {
         Iterable<Player> players = playerRepository.findAll();
         ArrayList<Player> listPlayers = new ArrayList<>();
         players.forEach(listPlayers::add);
