@@ -12,6 +12,8 @@ public class GalaxyGraph {
     // Aumentar el numero si se desea mas caminos usando la ecuacion
     // MAX_EDGES * ((MAX_EDGES-1)/2)
     // entre mas grande MAX_EDGES mas facil el juego
+    // MAX_EDGES = 4000;
+    // MAX_VERTICES = 40000;
     private final int MAX_EDGES = 40;
     private final int MAX_VERTICES = 40;
 

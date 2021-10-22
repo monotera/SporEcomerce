@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.sporecomerce.api.demo.player.Player;
 import com.sporecomerce.api.demo.player.PlayerRepository;
+import com.sporecomerce.api.demo.player.Role;
 import com.sporecomerce.api.demo.product.Product;
 import com.sporecomerce.api.demo.product.ProductRepository;
 import com.sporecomerce.api.demo.productxcrew.Productxcrew;
@@ -80,6 +81,26 @@ public class CrewmembersController {
         }
     }
 
+    @GetMapping("/captain")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<Boolean> isCaptain(@RequestParam Long player_id) {
+        Boolean cent = false;
+        try {
+            Player player = playerRepository.findById(player_id).get();
+            Crewmembers crew = player.getCrewmembers();
+            if (crew == null)
+                return new ResponseEntity<>(false, null, HttpStatus.NOT_FOUND);
+            for (Player p : crew.getPlayer_list()) {
+                if(p.getPlayer_role().equals(Role.CAPTAIN) && p.getId() != player_id){
+                    cent = true;
+                }
+            }
+            return new ResponseEntity<>(cent, null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(false, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PutMapping("")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<Crewmembers> modCrew(@RequestParam Long crew_id, @RequestBody Crewmembers crew) {
@@ -100,6 +121,27 @@ public class CrewmembersController {
             return new ResponseEntity<>(crew, null, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/change_crewName")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<Boolean> modCrewName(@RequestParam Long crew_id, @RequestParam String newName) {
+        try {
+            Crewmembers oldCrew = crewmembersRepository.findById(crew_id).get();
+            Crewmembers crew = new Crewmembers();
+            crew.setId(oldCrew.getId());
+            crew.setSpace_crew(oldCrew.getSpace_crew());
+            crew.setProducts(oldCrew.getProducts());
+            crew.setCrew_name(newName);
+            if (crew.getAccTime() == null)
+                crew.setAccTime(oldCrew.getAccTime());
+            if (crew.getCredits() == 0.0)
+                crew.setCredits(oldCrew.getCredits());
+            crewmembersRepository.save(crew);
+            return new ResponseEntity<>(true, null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(false, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
