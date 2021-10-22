@@ -81,7 +81,7 @@ public class SpaceshipController {
             spaceshipRepository.save(spaceship);
             return new ResponseEntity<>(spaceship, null, HttpStatus.OK);
         } catch (Exception e) {
-
+            logger.info(e.toString());
             return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -103,17 +103,21 @@ public class SpaceshipController {
         }
 
     }
+    // localhost:8080/spaceship/move-ship?star_origin_id=501&star_des_id=880&spaceship_id=502
 
-    @PutMapping("Move-ship")
+    @PutMapping("/move-ship")
     public ResponseEntity<Star> moveShip(@RequestParam Long star_origin_id, @RequestParam Long star_des_id,
             @RequestParam Long ship_id) {
         try {
             Spaceship spaceship = spaceshipRepository.findById(ship_id).orElseThrow();
             Star origin_star = starRepository.findById(star_origin_id).orElseThrow();
+            Star des_star = starRepository.findById(star_des_id).orElseThrow();
+            if (spaceshipService.moveShip(origin_star, des_star, spaceship) == false)
+                return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
 
             return new ResponseEntity<>(origin_star, null, HttpStatus.OK);
         } catch (Exception e) {
-
+            logger.info(e.toString());
             return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
