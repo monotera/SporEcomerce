@@ -101,6 +101,10 @@ public class Star {
         return spaceLobby;
     }
 
+    /*
+     * public boolean removeShip(Spaceship spaceship) { for (Spaceship spaceship2 :
+     * spaceLobby) { if(spaceship.getId() == spaceship2.getId()) } return true; }
+     */
     public void setSpaceLobby(List<Spaceship> spaceLobby) {
         this.spaceLobby = spaceLobby;
     }

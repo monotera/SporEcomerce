@@ -31,6 +31,8 @@ public class SpaceshipController {
     StarRepository starRepository;
     Logger logger = LoggerFactory.getLogger(SpaceshipController.class);
 
+    SpaceshipService spaceshipService = new SpaceshipService();
+
     // http://localhost:8080/spaceship/spaceships
     @GetMapping("/spaceships")
     @CrossOrigin(origins = "http://localhost:4200")
@@ -79,7 +81,54 @@ public class SpaceshipController {
             spaceshipRepository.save(spaceship);
             return new ResponseEntity<>(spaceship, null, HttpStatus.OK);
         } catch (Exception e) {
+            logger.info(e.toString());
+            return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
+    @GetMapping("/ship-star")
+    @CrossOrigin(origins = "http://localhost:4200")
+
+    public ResponseEntity<Star> getShipStar(@RequestParam Long ship_id) {
+        try {
+            Spaceship spaceship = spaceshipRepository.findById(ship_id).orElseThrow();
+            Iterable<Star> tempStars = starRepository.findAll();
+            ArrayList<Star> stars = new ArrayList<>();
+            tempStars.forEach(stars::add);
+            Star actualStar = spaceshipService.findShipStar(spaceship, stars);
+            if (actualStar == null)
+                return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(actualStar, null, HttpStatus.OK);
+        } catch (Exception e) {
+
+            return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+    // localhost:8080/spaceship/move-ship?star_origin_id=501&star_des_id=880&spaceship_id=502
+
+    @PutMapping("/move-ship")
+    @CrossOrigin(origins = "http://localhost:4200")
+
+    public ResponseEntity<Star> moveShip(@RequestParam Long star_origin_id, @RequestParam Long star_des_id,
+            @RequestParam Long ship_id) {
+        try {
+            Spaceship spaceship = spaceshipRepository.findById(ship_id).orElseThrow();
+            Star origin_star = starRepository.findById(star_origin_id).orElseThrow();
+            Star des_star = starRepository.findById(star_des_id).orElseThrow();
+
+            if (!spaceshipService.isMyStar(origin_star, spaceship))
+                return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
+            origin_star.getSpaceLobby().remove(spaceship);
+            spaceship.setStar(null);
+            starRepository.save(origin_star);
+
+            des_star.addSpaceShip(spaceship);
+            starRepository.save(des_star);
+
+            return new ResponseEntity<>(origin_star, null, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.info(e.toString());
             return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
