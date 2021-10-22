@@ -204,6 +204,17 @@ public class Crewmembers {
         }
     }
 
+    public void removeallProduct() {
+        for (Iterator<Productxcrew> iterator = products.iterator(); iterator.hasNext();) {
+            Productxcrew pxc = iterator.next();
+            iterator.remove();
+            pxc.getProduct().getCrew().remove(pxc);
+            pxc.setCrew(null);
+            pxc.setProduct(null);
+        }
+
+    }
+
     public Productxcrew getProduct(Long product_id) {
         for (Productxcrew productxcrew : products) {
             if (productxcrew.getProduct().getId() == product_id) {

@@ -117,7 +117,7 @@ public class SpaceshipController {
             Star origin_star = starRepository.findById(star_origin_id).orElseThrow();
             Star des_star = starRepository.findById(star_des_id).orElseThrow();
 
-            if(spaceship.getCrew().getAccTime() > 1000000){
+            if (spaceship.getCrew().getAccTime() > 80000) {
                 return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
@@ -125,9 +125,9 @@ public class SpaceshipController {
                 return new ResponseEntity<>(null, null, HttpStatus.NOT_FOUND);
             origin_star.getSpaceLobby().remove(spaceship);
             spaceship.setStar(null);
-            Integer time = (int)((spaceship.getVelocity()*365)/10000);
+            Integer time = (int) ((spaceship.getVelocity() * 365) / 10000);
             Integer actTime = spaceship.getCrew().getAccTime();
-            spaceship.getCrew().setAccTime(actTime+time);
+            spaceship.getCrew().setAccTime(actTime + time);
             starRepository.save(origin_star);
 
             des_star.addSpaceShip(spaceship);

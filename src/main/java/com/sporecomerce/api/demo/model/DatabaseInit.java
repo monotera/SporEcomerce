@@ -76,8 +76,8 @@ public class DatabaseInit implements ApplicationRunner {
         galaxyGraphService = new GalaxyGraphService();
         galaxyGraphService.generateGalaxy();
         galaxyGraphService.printGraph();
-        
-        prob = 2;
+
+        prob = 99;
         GalaxyGraph spore = new GalaxyGraph();
 
         nProducts = 500;

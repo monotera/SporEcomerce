@@ -92,7 +92,7 @@ public class CrewmembersController {
             if (crew == null)
                 return new ResponseEntity<>(false, null, HttpStatus.NOT_FOUND);
             for (Player p : crew.getPlayer_list()) {
-                if(p.getPlayer_role().equals(Role.CAPTAIN) && p.getId() != player_id){
+                if (p.getPlayer_role().equals(Role.CAPTAIN) && p.getId() != player_id) {
                     cent = true;
                 }
             }
@@ -219,7 +219,7 @@ public class CrewmembersController {
             Player player = playerRepository.findById(player_id).get();
             player.getCrewmembers().setAccTime(0);
             player.getCrewmembers().setCredits(1000000);
-            player.getCrewmembers().setProducts(null);
+            player.getCrewmembers().removeallProduct();
             playerRepository.save(player);
             crewmembersRepository.save(player.getCrewmembers());
             return new ResponseEntity<>(true, null, HttpStatus.OK);
