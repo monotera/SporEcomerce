@@ -43,7 +43,7 @@ public class SpaceshipService {
             logger.info("F");
             return false;
         }
-
+        logger.info("arg");
         try {
             origin.getSpaceLobby().remove(ship);
             logger.info("1");

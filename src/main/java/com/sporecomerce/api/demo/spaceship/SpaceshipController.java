@@ -87,6 +87,8 @@ public class SpaceshipController {
     }
 
     @GetMapping("/ship-star")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Star> getShipStar(@RequestParam Long ship_id) {
         try {
             Spaceship spaceship = spaceshipRepository.findById(ship_id).orElseThrow();
@@ -106,6 +108,8 @@ public class SpaceshipController {
     // localhost:8080/spaceship/move-ship?star_origin_id=501&star_des_id=880&spaceship_id=502
 
     @PutMapping("/move-ship")
+    @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<Star> moveShip(@RequestParam Long star_origin_id, @RequestParam Long star_des_id,
             @RequestParam Long ship_id) {
         try {
