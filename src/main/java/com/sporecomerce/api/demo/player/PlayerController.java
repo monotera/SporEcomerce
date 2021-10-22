@@ -83,6 +83,47 @@ public class PlayerController {
         }
     }
 
+    @PutMapping("/mod_name")
+    @CrossOrigin(origins = "http://localhost:4200")
+
+    public ResponseEntity<Boolean> modPlayerName(@RequestParam Long player_id, @RequestParam String newName) {
+        try {
+            Player player = playerRepository.findById(player_id).get();
+            if (player == null)
+                return new ResponseEntity<>(false, null, HttpStatus.NOT_FOUND);
+
+            Player newPlayer = new Player();
+            newPlayer.setId(player.getId());
+            newPlayer.setCrewmembers(player.getCrewmembers());
+            newPlayer.setPlayer_name(newName);
+            newPlayer.setPlayer_role(player.getPlayer_role());
+            playerRepository.save(newPlayer);
+            return new ResponseEntity<>(true, null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(false, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/mod_role")
+    @CrossOrigin(origins = "http://localhost:4200")
+
+    public ResponseEntity<Boolean> modPlayerRole(@RequestParam Long player_id, @RequestParam String newRole) {
+        try {
+            Player player = playerRepository.findById(player_id).get();
+            if (player == null)
+                return new ResponseEntity<>(false, null, HttpStatus.NOT_FOUND);
+            Player newPlayer = new Player();
+            newPlayer.setId(player.getId());
+            newPlayer.setCrewmembers(player.getCrewmembers());
+            newPlayer.setPlayer_name(player.getPlayer_name());
+            newPlayer.setPlayer_role(Role.valueOf(newRole));
+            playerRepository.save(newPlayer);
+            return new ResponseEntity<>(true, null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(false, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PutMapping("/change_crew")
     @CrossOrigin(origins = "http://localhost:4200")
 
