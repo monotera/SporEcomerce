@@ -56,8 +56,7 @@ public class ProductxplanetController {
         Productxcrew pxc = productxcrewRepository.findById(pxc_id).orElseThrow();
         Crewmembers crew = pxc.getCrewmembers();
 
-        if (pxc.getStock() < amountProducts
-                || crew.calculateAvaliableCapacity() < pxp.getProduct().getLoad_capacity()) {
+        if (pxc.getStock() < amountProducts) {
             return new ResponseEntity<>(null, null, HttpStatus.NOT_MODIFIED);
         }
 
