@@ -18,7 +18,6 @@ public class SpaceshipService {
 
     @Autowired
     SpaceshipRepository spaceshipRepository;
-    Logger logger = LoggerFactory.getLogger(SpaceshipService.class);
 
     public Star findShipStar(Spaceship ship, ArrayList<Star> stars) {
         for (Star star : stars) {
@@ -36,37 +35,6 @@ public class SpaceshipService {
                 return true;
         }
         return false;
-    }
-
-    public Boolean moveShip(Star origin, Star des, Spaceship ship) {
-        if (!isMyStar(origin, ship)) {
-            logger.info("F");
-            return false;
-        }
-        logger.info("arg");
-        try {
-            origin.getSpaceLobby().remove(ship);
-            logger.info("1");
-            ship.setStar(null);
-            logger.info("2");
-
-            starRepository.save(origin);
-            logger.info("3");
-
-            des.addSpaceShip(ship);
-            logger.info("4");
-
-            starRepository.save(des);
-            logger.info("5");
-
-            spaceshipRepository.save(ship);
-            logger.info("6");
-
-            return true;
-        } catch (Exception e) {
-            logger.info(e.toString());
-            return false;
-        }
     }
 
 }
