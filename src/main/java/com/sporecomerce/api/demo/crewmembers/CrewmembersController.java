@@ -1,6 +1,7 @@
 package com.sporecomerce.api.demo.crewmembers;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.sporecomerce.api.demo.player.Player;
 import com.sporecomerce.api.demo.player.PlayerRepository;
@@ -208,6 +209,23 @@ public class CrewmembersController {
             return new ResponseEntity<>(crew, null, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/game-over")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<Boolean> gameOver(@RequestParam Long player_id) {
+        try {
+            Player player = playerRepository.findById(player_id).get();
+            player.getCrewmembers().setAccTime(0);
+            player.getCrewmembers().setCredits(1000000);
+            player.getCrewmembers().setProducts(null);
+            playerRepository.save(player);
+            crewmembersRepository.save(player.getCrewmembers());
+            return new ResponseEntity<>(true, null, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(false, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
