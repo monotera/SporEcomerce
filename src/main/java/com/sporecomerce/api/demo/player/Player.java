@@ -18,6 +18,7 @@ public class Player {
     private String player_name;
     @Enumerated(EnumType.ORDINAL)
     private Role player_role;
+    private String password;
 
     @ManyToOne
     private Crewmembers crewmembers;
@@ -30,12 +31,27 @@ public class Player {
         this.player_role = player_role;
     }
 
+    public Player(String player_name, Role player_role, String password, Crewmembers crewmembers) {
+        this.player_name = player_name;
+        this.player_role = player_role;
+        this.password = password;
+        this.crewmembers = crewmembers;
+    }
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Crewmembers getCrewmembers() {

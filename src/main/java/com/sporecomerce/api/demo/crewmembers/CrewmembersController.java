@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -92,7 +93,7 @@ public class CrewmembersController {
             if (crew == null)
                 return new ResponseEntity<>(false, null, HttpStatus.NOT_FOUND);
             for (Player p : crew.getPlayer_list()) {
-                if (p.getPlayer_role().equals(Role.CAPTAIN) && p.getId() != player_id) {
+                if (p.getPlayer_role().equals(Role.ROLE_CAPTAIN) && p.getId() != player_id) {
                     cent = true;
                 }
             }
@@ -166,6 +167,7 @@ public class CrewmembersController {
 
     @PutMapping("add-product")
     @CrossOrigin(origins = "http://localhost:4200")
+    @PreAuthorize(value = "hasRole('ROLE_PILOT') || hasRole('ROLE_CAPTAIN')")
     public ResponseEntity<Crewmembers> addProduct(@RequestParam Long crew_id, @RequestParam Long product_id,
             @RequestBody Productxcrew pxcNew) {
         try {
@@ -197,6 +199,7 @@ public class CrewmembersController {
 
     @PutMapping("remove-product")
     @CrossOrigin(origins = "http://localhost:4200")
+    @PreAuthorize(value = "hasRole('ROLE_PILOT') || hasRole('ROLE_CAPTAIN')")
     public ResponseEntity<Crewmembers> removeProduct(@RequestParam Long crew_id, @RequestParam Long product_id) {
         try {
             Crewmembers crew = crewmembersRepository.findById(crew_id).get();
