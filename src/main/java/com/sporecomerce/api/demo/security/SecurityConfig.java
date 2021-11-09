@@ -56,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable().and()
                 ///
                 .exceptionHandling().authenticationEntryPoint(entryPoint).and().authorizeRequests()
-                .antMatchers("/public/**", "/login/**").permitAll()
+                .antMatchers("/public/**", "/login/**", "/**").permitAll()
                 // Uncomment this to enable H2 console
                 .antMatchers("/h2/**").permitAll()
                 ////
