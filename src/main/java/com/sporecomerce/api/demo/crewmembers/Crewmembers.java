@@ -37,11 +37,11 @@ public class Crewmembers {
     @JoinColumn(name = "spaceship_id", referencedColumnName = "id")
     private Spaceship space_crew = new Spaceship();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "crewmembers")
+    @OneToMany(mappedBy = "crewmembers")
     @JsonIgnore
     private List<Player> player_list = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "crewmembers")
+    @OneToMany(mappedBy = "crewmembers")
     @JsonSerialize(using = CustomSerializer.class)
     private Set<Productxcrew> products = new HashSet<>();
 

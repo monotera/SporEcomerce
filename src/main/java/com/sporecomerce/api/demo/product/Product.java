@@ -28,11 +28,11 @@ public class Product {
     private String product_name;
     private double load_capacity;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    @OneToMany(mappedBy = "product")
     @JsonIgnore
     Set<Productxcrew> crew = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    @OneToMany(mappedBy = "product")
     @JsonBackReference(value = "planet-pxp")
     Set<Productxplanet> planets = new HashSet<>();
 

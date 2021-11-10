@@ -32,12 +32,15 @@ import com.sporecomerce.api.demo.star.StarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile("devel")
 public class DatabaseInit implements ApplicationRunner {
 
+    // mvn clean install spring-boot:run -Dspring-boot.run.profiles=devel
     private int nProducts;
     private int nStars;
     private int prob;
