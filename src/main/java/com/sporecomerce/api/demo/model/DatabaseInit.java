@@ -32,6 +32,7 @@ import com.sporecomerce.api.demo.star.StarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -201,6 +202,9 @@ public class DatabaseInit implements ApplicationRunner {
         return test;
     }
 
+    @Autowired
+    private PasswordEncoder encoder;
+
     private ArrayList<Player> generate_players(ArrayList<Crewmembers> sc) {
         ArrayList<Player> test = new ArrayList<>();
         PlayerGenerator gP = new PlayerGenerator();
@@ -217,6 +221,8 @@ public class DatabaseInit implements ApplicationRunner {
                 }
 
                 gP.initial(p, id, r);
+                p.setPlayer_name("User" + p.getPlayer_name() + random.nextInt(500));
+                p.setPassword(encoder.encode("pass123"));
                 c.addPlayer(p);
 
                 test.add(p);

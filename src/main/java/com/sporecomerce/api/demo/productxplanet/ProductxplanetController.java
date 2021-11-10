@@ -8,6 +8,7 @@ import com.sporecomerce.api.demo.productxcrew.ProductxcrewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,7 @@ public class ProductxplanetController {
 
     @PutMapping("/buy")
     @CrossOrigin(origins = "http://localhost:4200")
+    @PreAuthorize(value = "hasRole('ROLE_MERCHANT') || hasRole('ROLE_CAPTAIN')")
     public ResponseEntity<Productxplanet> buyProduct(@RequestParam Integer amountProducts, @RequestParam Long pxp_id,
             @RequestParam Long crew_id) {
         Productxplanet pxp = productxplanetRepository.findById(pxp_id).orElseThrow();
@@ -49,6 +51,7 @@ public class ProductxplanetController {
 
     @PutMapping("/sell")
     @CrossOrigin(origins = "http://localhost:4200")
+    @PreAuthorize(value = "hasRole('ROLE_MERCHANT') || hasRole('ROLE_CAPTAIN')")
     public ResponseEntity<Productxplanet> sellProduct(@RequestParam Integer amountProducts, @RequestParam Long pxp_id,
             @RequestParam Long pxc_id) {
 

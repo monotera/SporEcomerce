@@ -9,6 +9,9 @@ import com.sporecomerce.api.demo.star.Star;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +42,14 @@ public class PlayerController {
         return new ResponseEntity<>(response, null, HttpStatus.OK);
     }
 
+    @GetMapping("/log-player")
+    public String getLoggedPlayer() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String name = auth.getName();
+        Object a = auth.getPrincipal();
+        return "a";
+    }
+
     @GetMapping("")
     @CrossOrigin(origins = "http://localhost:4200")
 
@@ -57,10 +68,10 @@ public class PlayerController {
     @CrossOrigin(origins = "http://localhost:4200")
 
     public ResponseEntity<Player> getPlayer() {
-        Iterable<Player> players = playerRepository.findAll();
-        ArrayList<Player> listPlayers = new ArrayList<>();
-        players.forEach(listPlayers::add);
-        return new ResponseEntity<>(listPlayers.get(0), null, HttpStatus.OK);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String name = auth.getName();
+        Player player = playerRepository.findByPlayer_name(name).orElseThrow();
+        return new ResponseEntity<>(player, null, HttpStatus.OK);
     }
 
     @PutMapping("")
