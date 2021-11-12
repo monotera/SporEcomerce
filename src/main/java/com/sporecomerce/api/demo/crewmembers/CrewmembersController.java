@@ -1,7 +1,6 @@
 package com.sporecomerce.api.demo.crewmembers;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import com.sporecomerce.api.demo.player.Player;
 import com.sporecomerce.api.demo.player.PlayerRepository;

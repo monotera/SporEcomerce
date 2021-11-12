@@ -1,6 +1,5 @@
 package com.sporecomerce.api.demo.productxcrew;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;

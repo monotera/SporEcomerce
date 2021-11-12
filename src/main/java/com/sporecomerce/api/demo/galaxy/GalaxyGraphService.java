@@ -19,8 +19,6 @@ import java.lang.reflect.Type;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
-import antlr.collections.impl.LList;
-
 public class GalaxyGraphService {
 
     private GalaxyGraph galaxy = new GalaxyGraph();
@@ -102,7 +100,6 @@ public class GalaxyGraphService {
         return visited;
     }
 
-    // TODO:Check if clear graph works
     public void clearGraph() {
         for (int i = 0; i < galaxy.getVertices(); i++)
             galaxy.getAdjacencyList().get(i).clear();
@@ -159,7 +156,6 @@ public class GalaxyGraphService {
             path.add(pred.get(crawl));
             crawl = pred.get(crawl);
         }
-        // TODO: Store the values
         for (int i = path.size() - 1; i >= 0; i--) {
             System.out.print(path.get(i) + " ");
         }
@@ -174,7 +170,6 @@ public class GalaxyGraphService {
             fr.write(prettyJson);
             fr.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

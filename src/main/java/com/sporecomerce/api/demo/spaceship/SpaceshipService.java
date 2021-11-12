@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import com.sporecomerce.api.demo.star.Star;
 import com.sporecomerce.api.demo.star.StarRepository;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
