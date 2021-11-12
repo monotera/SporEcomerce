@@ -4,6 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 import javax.validation.constraints.AssertTrue;
 
 import com.sporecomerce.api.demo.crewmembers.Crewmembers;
@@ -28,14 +32,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Bean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integrationstest")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-class DemoApplicationTests {
+class CrewControllerIntegrationTest {
 
 	@Autowired
 	CrewmembersRepository crewmembersRepository;
@@ -62,6 +68,8 @@ class DemoApplicationTests {
 	TestRestTemplate rest;
 
 	private Crewmembers crew;
+
+	private Crewmembers crew2;
 
 	private Player pl1, pl2;
 
@@ -100,6 +108,18 @@ class DemoApplicationTests {
 		this.pl1 = pl1;
 		this.pl2 = pl2;
 
+		Star star2 = new Star(1, 0, 0, "star2", false);
+		starRepository.save(star2);
+
+		Spaceship s2 = new Spaceship("s2", 1000, 100);
+		s2.changeStar(star2, null);
+		spaceshipRepository.save(s2);
+		Crewmembers c2 = new Crewmembers("Crew2", 0, 2000);
+		c2.setSpace_crew(s2);
+		c2.addProduct(p1, 100, 0, false, 10, true);
+		crewmembersRepository.save(c2);
+		this.crew2 = c2;
+
 	}
 
 	@Test
@@ -111,19 +131,26 @@ class DemoApplicationTests {
 	}
 
 	@Test
+	@DisplayName("Test the fetch all the crews")
+	void fetchCrew() {
+		Crewmembers[] res = rest.getForObject("http://localhost:" + port + "/crew/crews", Crewmembers[].class);
+		assertTrue(res.length == 2);
+	}
+
+	@Test
+	@DisplayName("Test petition that validates if there is a captain aboard")
+	void fetchHasCaptain() {
+		Boolean res = rest.getForObject("http://localhost:" + port + "/crew/captain?player_id=" + this.pl2.getId(),
+				Boolean.class);
+		assertEquals(true, res);
+	}
+
+	@Test
 	@DisplayName("Test the calculation of the sum of all the weights of the Crew's products")
 	void fetchLoadCapacity() {
 		Double res = rest.getForObject("http://localhost:" + port + "/crew/load-capacity?crew_id=" + this.crew.getId(),
 				Double.class);
-		assertEquals(100 * 10.0, res);
-	}
-
-	// TODO:Preguntar a carlos
-	@Test
-	void fetchIsCaptain() {
-		Boolean res = rest.getForObject("http://localhost:" + port + "/crew/captain?player_id=" + this.pl1.getId(),
-				Boolean.class);
-		assertEquals(false, res);
+		assertEquals(1000, res);
 	}
 
 	@Test

@@ -212,6 +212,7 @@ public class DatabaseInit implements ApplicationRunner {
         ArrayList<Player> test = new ArrayList<>();
         PlayerGenerator gP = new PlayerGenerator();
         Random random = new Random();
+        boolean testUser = false;
 
         for (Crewmembers c : sc) {
             for (int i = 0; i < nPlayers; i++) {
@@ -222,9 +223,14 @@ public class DatabaseInit implements ApplicationRunner {
                 if (i == 0) {
                     r = Role.values()[0];
                 }
-
                 gP.initial(p, id, r);
-                p.setPlayer_name("User" + p.getPlayer_name() + random.nextInt(500));
+                if (!testUser) {
+                    p.setPlayer_name("TestUser");
+                    testUser = true;
+                } else {
+                    p.setPlayer_name("User" + p.getPlayer_name() + random.nextInt(500));
+                }
+
                 p.setPassword(encoder.encode("pass123"));
                 c.addPlayer(p);
 
