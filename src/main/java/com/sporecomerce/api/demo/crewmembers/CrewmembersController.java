@@ -126,6 +126,16 @@ public class CrewmembersController {
         }
     }
 
+    @GetMapping("/cap")
+    public Player findCaptain(@RequestParam Long crew_id) {
+        Crewmembers crew = crewmembersRepository.findById(crew_id).orElseThrow();
+        for (Player player : crew.getPlayer_list()) {
+            if (player.getPlayer_role() == Role.ROLE_CAPTAIN)
+                return player;
+        }
+        return null;
+    }
+
     @PutMapping("/change_crewName")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<Boolean> modCrewName(@RequestParam Long crew_id, @RequestParam String newName) {
