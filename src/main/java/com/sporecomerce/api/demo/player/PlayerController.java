@@ -4,13 +4,11 @@ import java.util.ArrayList;
 
 import com.sporecomerce.api.demo.crewmembers.Crewmembers;
 import com.sporecomerce.api.demo.crewmembers.CrewmembersRepository;
-import com.sporecomerce.api.demo.star.Star;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,14 +38,6 @@ public class PlayerController {
         Iterable<Player> db = playerRepository.findAll();
         db.forEach(response::add);
         return new ResponseEntity<>(response, null, HttpStatus.OK);
-    }
-
-    @GetMapping("/log-player")
-    public String getLoggedPlayer() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String name = auth.getName();
-        Object a = auth.getPrincipal();
-        return "a";
     }
 
     @GetMapping("")

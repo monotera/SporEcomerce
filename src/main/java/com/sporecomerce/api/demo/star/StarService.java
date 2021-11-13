@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.sporecomerce.api.demo.galaxy.GalaxyGraphService;
 
@@ -23,7 +21,6 @@ public class StarService {
     public Logger logger = LoggerFactory.getLogger(StarService.class);
 
     // ------------------------------------------------------------------------
-    // TODO: Change
     public String findNearStars(Star star, ArrayList<Star> stars) {
         galaxyGraphService.uploadGalaxy();
         List<List<Integer>> graph = galaxyGraphService.getGraph();

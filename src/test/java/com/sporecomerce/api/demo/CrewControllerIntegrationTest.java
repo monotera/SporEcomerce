@@ -1,18 +1,10 @@
 package com.sporecomerce.api.demo;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-
-import javax.validation.constraints.AssertTrue;
-
 import com.sporecomerce.api.demo.crewmembers.Crewmembers;
 import com.sporecomerce.api.demo.crewmembers.CrewmembersRepository;
-import com.sporecomerce.api.demo.planet.Planet;
 import com.sporecomerce.api.demo.planet.PlanetRepository;
 import com.sporecomerce.api.demo.player.Player;
 import com.sporecomerce.api.demo.player.PlayerRepository;
@@ -32,11 +24,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.context.annotation.Bean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integrationstest")
@@ -68,8 +58,6 @@ class CrewControllerIntegrationTest {
 	TestRestTemplate rest;
 
 	private Crewmembers crew;
-
-	private Crewmembers crew2;
 
 	private Player pl1, pl2;
 
@@ -118,7 +106,6 @@ class CrewControllerIntegrationTest {
 		c2.setSpace_crew(s2);
 		c2.addProduct(p1, 100, 0, false, 10, true);
 		crewmembersRepository.save(c2);
-		this.crew2 = c2;
 
 	}
 

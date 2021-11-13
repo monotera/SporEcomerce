@@ -1,12 +1,10 @@
 package com.sporecomerce.api.demo.star;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.sporecomerce.api.demo.galaxy.GalaxyGraphService;
 import com.sporecomerce.api.demo.planet.Planet;
 import com.sporecomerce.api.demo.planet.PlanetRepository;
-import com.sporecomerce.api.demo.player.PlayerRepository;
 import com.sporecomerce.api.demo.spaceship.Spaceship;
 import com.sporecomerce.api.demo.spaceship.SpaceshipRepository;
 
@@ -66,7 +64,6 @@ public class StarController {
             starRepository.save(star);
             return starService.transformIdToStar(star, stars);
         } catch (Exception e) {
-            // TODO: handle exception
             logger.info(e.toString());
             return null;
         }
