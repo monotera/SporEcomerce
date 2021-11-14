@@ -16,14 +16,17 @@ import com.sporecomerce.api.demo.spaceship.SpaceshipRepository;
 import com.sporecomerce.api.demo.star.Star;
 import com.sporecomerce.api.demo.star.StarRepository;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
-
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -75,7 +78,7 @@ class CrewControllerSystemTest {
 	@BeforeEach
 	void init() {
 
-		Star star = new Star(0, 0, 0, "star", true);
+		Star star = new Star(0, 0, 0, "Test star", true);
 		starRepository.save(star);
 
 		Product p1 = new Product("p1", 10);
@@ -94,8 +97,8 @@ class CrewControllerSystemTest {
 		Player pl2 = new Player("pl2", Role.ROLE_MERCHANT);
 		Player pl3 = new Player("pl3", Role.ROLE_PILOT);
 		pl1.setPassword(encoder.encode("pass123"));
-		pl2.setPassword("password");
-		pl3.setPassword("password");
+		pl2.setPassword(encoder.encode("password"));
+		pl3.setPassword(encoder.encode("password"));
 
 		c1.addPlayer(pl1);
 		c1.addPlayer(pl2);
@@ -125,42 +128,145 @@ class CrewControllerSystemTest {
 		options.addArguments("--no-sandbox");
 		options.addArguments("--disable-gpu");
 		options.addArguments("--disable-extensions");
-		// options.addArguments("--headless");
+		options.addArguments("--headless");
 		options.merge(DesiredCapabilities.firefox());
 
 		this.browser = new FirefoxDriver(options);
-		this.wait = new WebDriverWait(browser, 10);
+		this.wait = new WebDriverWait(browser, 15);
 
 	}
 
+	@AfterEach
+	void end() {
+		this.browser.quit();
+	}
+
 	@Test
-	@DisplayName("Test the fetch of a single crew")
-	void fetchSpecificCrew() {
+	@DisplayName("Test user consulting his crew info")
+	void testFetchSpecificCrew() {
 		browser.get(baseUrl + "/login");
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("login")));
+		WebElement loginBtn = browser.findElementById("login");
+		loginBtn.click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("hamburger")));
+		WebElement hamburger = browser.findElementById("hamburger");
+		hamburger.click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("navliAccount")));
+		WebElement accountLink = browser.findElementById("navliAccount");
+		accountLink.click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("accountbtnCrewInfo")));
+		WebElement crewBtn = browser.findElementById("accountbtnCrewInfo");
+		crewBtn.click();
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("crewliCrewName")));
+		WebElement crewName = browser.findElementById("crewliCrewName");
+		String [] cleanName = crewName.getText().split("crew name:");
+		assertEquals(cleanName[1], "crew1");
 	}
 
 	@Test
-	@DisplayName("Test the fetch all the crews")
-	void fetchCrew() {
+	@DisplayName("Test user captain changing his crew info")
+	void testChangeCrewName() {
+		browser.get(baseUrl + "/login");
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("login")));
+		WebElement loginBtn = browser.findElementById("login");
+		loginBtn.click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("hamburger")));
+		WebElement hamburger = browser.findElementById("hamburger");
+		hamburger.click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("navliAccount")));
+		WebElement accountLink = browser.findElementById("navliAccount");
+		accountLink.click();
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("accounttxtNewCrewName")));
+		WebElement crewNameTxt = browser.findElementById("accounttxtNewCrewName");
+		crewNameTxt.sendKeys("Millennium falcon");
+		WebElement applyBtn = browser.findElementById("accountbtnNewCrewName");
+		applyBtn.click();
+		String alertMsg = browser.switchTo().alert().getText();
+		assertEquals("¡Changes have been made! Millennium falcon", alertMsg);
+	}
+	@Test
+	@DisplayName("Test user merchant changing his crew info")
+	void testChangeCrewNameError() {
+		Player player_aux = playerRepository.findById(this.pl1.getId()).orElseThrow();
+		player_aux.setPlayer_role(Role.ROLE_MERCHANT);
+		playerRepository.save(player_aux);
+		browser.get(baseUrl + "/login");
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("login")));
+		WebElement loginBtn = browser.findElementById("login");
+		loginBtn.click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("hamburger")));
+		WebElement hamburger = browser.findElementById("hamburger");
+		hamburger.click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("navliAccount")));
+		WebElement accountLink = browser.findElementById("navliAccount");
+		accountLink.click();
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("accounttxtNewCrewName")));
+		WebElement crewNameTxt = browser.findElementById("accounttxtNewCrewName");
+		crewNameTxt.sendKeys("Millennium falcon");
+		WebElement applyBtn = browser.findElementById("accountbtnNewCrewName");
+		applyBtn.click();
+		String alertMsg = browser.switchTo().alert().getText();
+		assertEquals("¡You are not the captain! ROLE_MERCHANT", alertMsg);
+	}
 
+
+	@Test
+	@DisplayName("Test the fetching of the info of the star where the crew is")
+	void testFetchStarInfo() {
+		browser.get(baseUrl + "/login");
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("login")));
+		WebElement loginBtn = browser.findElementById("login");
+		loginBtn.click();
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("navStarName")));
+		WebElement starName = browser.findElementById("navStarName");
+		assertEquals("Test star", starName.getText());
 	}
 
 	@Test
-	@DisplayName("Test petition that validates if there is a captain aboard")
-	void fetchHasCaptain() {
-
+	@DisplayName("Test the game ender button when you dont have enough credentials")
+	void testTerminateGameError() {
+		Player player_aux = playerRepository.findById(this.pl1.getId()).orElseThrow();
+		player_aux.setPlayer_role(Role.ROLE_MERCHANT);
+		playerRepository.save(player_aux);
+		browser.get(baseUrl + "/login");
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("login")));
+		WebElement loginBtn = browser.findElementById("login");
+		loginBtn.click();
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("navibtnTerminate")));
+		WebElement terminateBtn = browser.findElementById("navibtnTerminate");
+		terminateBtn.click();
+		String alertMsg = browser.switchTo().alert().getText();
+		assertEquals("Only the captain can finish the game", alertMsg);
 	}
 
 	@Test
-	@DisplayName("Test the calculation of the sum of all the weights of the Crew's products")
-	void fetchLoadCapacity() {
-
+	@DisplayName("Test the game ender button")
+	void testTerminateGame() {
+		browser.get(baseUrl + "/login");
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("login")));
+		WebElement loginBtn = browser.findElementById("login");
+		loginBtn.click();
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("navibtnTerminate")));
+		WebElement terminateBtn = browser.findElementById("navibtnTerminate");
+		terminateBtn.click();
+		String alertMsg = browser.switchTo().alert().getText();
+		assertEquals("Total time: 0 Total Earned: 1000", alertMsg);
 	}
+	
 
 	@Test
-	@DisplayName("Test fetching of player with rol captain")
-	void fetchCaptain() {
-
+	@DisplayName("Test logout")
+	void testLogout() {
+		browser.get(baseUrl + "/login");
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("login")));
+		WebElement loginBtn = browser.findElementById("login");
+		loginBtn.click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("hamburger")));
+		WebElement hamburger = browser.findElementById("hamburger");
+		hamburger.click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("navliLogout")));
+		WebElement accountLink = browser.findElementById("navliLogout");
+		accountLink.click();
+		assertEquals(baseUrl+"/", browser.getCurrentUrl());
 	}
-
 }

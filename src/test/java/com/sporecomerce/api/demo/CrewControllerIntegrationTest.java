@@ -111,7 +111,7 @@ class CrewControllerIntegrationTest {
 
 	@Test
 	@DisplayName("Test the fetch of a single crew")
-	void fetchSpecificCrew() {
+	void testFetchSpecificCrew() {
 		Crewmembers res = rest.getForObject("http://localhost:" + port + "/crew?crew_id=" + this.crew.getId(),
 				Crewmembers.class);
 		assertTrue(this.crew.getId() == res.getId());
@@ -119,14 +119,14 @@ class CrewControllerIntegrationTest {
 
 	@Test
 	@DisplayName("Test the fetch all the crews")
-	void fetchCrew() {
+	void testFetchCrew() {
 		Crewmembers[] res = rest.getForObject("http://localhost:" + port + "/crew/crews", Crewmembers[].class);
 		assertTrue(res.length == 2);
 	}
 
 	@Test
 	@DisplayName("Test petition that validates if there is a captain aboard")
-	void fetchHasCaptain() {
+	void testFetchHasCaptain() {
 		Boolean res = rest.getForObject("http://localhost:" + port + "/crew/captain?player_id=" + this.pl2.getId(),
 				Boolean.class);
 		assertEquals(true, res);
@@ -134,7 +134,7 @@ class CrewControllerIntegrationTest {
 
 	@Test
 	@DisplayName("Test the calculation of the sum of all the weights of the Crew's products")
-	void fetchLoadCapacity() {
+	void testFetchLoadCapacity() {
 		Double res = rest.getForObject("http://localhost:" + port + "/crew/load-capacity?crew_id=" + this.crew.getId(),
 				Double.class);
 		assertEquals(1000, res);
@@ -142,7 +142,7 @@ class CrewControllerIntegrationTest {
 
 	@Test
 	@DisplayName("Test fetching of player with rol captain")
-	void fetchCaptain() {
+	void testFetchCaptain() {
 		Player res = rest.getForObject("http://localhost:" + port + "/crew/cap?crew_id=" + this.crew.getId(),
 				Player.class);
 		assertTrue(this.pl1.getId() == res.getId());
