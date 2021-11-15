@@ -91,7 +91,7 @@ public class DatabaseInit implements ApplicationRunner {
             save_o(s);
         }
 
-        nStars = 40;
+        nStars = 40000;
         ArrayList<Star> st = generate_stars(pr, spore);
 
         nSpaceships = 20;
