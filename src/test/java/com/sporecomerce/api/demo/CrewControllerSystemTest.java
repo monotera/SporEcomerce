@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.sporecomerce.api.demo.crewmembers.Crewmembers;
 import com.sporecomerce.api.demo.crewmembers.CrewmembersRepository;
+import com.sporecomerce.api.demo.planet.Planet;
 import com.sporecomerce.api.demo.planet.PlanetRepository;
 import com.sporecomerce.api.demo.player.Player;
 import com.sporecomerce.api.demo.player.PlayerRepository;
@@ -20,7 +21,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -81,9 +81,15 @@ class CrewControllerSystemTest {
 		Star star = new Star(0, 0, 0, "Test star", true);
 		starRepository.save(star);
 
+		Planet planet = new Planet("planet1");
+		planetRepository.save(planet);
 		Product p1 = new Product("p1", 10);
 		productRepository.save(p1);
 
+		planet.addProduct(p1, 100, 10000, true, 100000, true);
+		star.addPlanet(planet);
+
+		planetRepository.save(planet);
 		Spaceship s1 = new Spaceship("s1", 1000, 100);
 		s1.changeStar(star, null);
 		spaceshipRepository.save(s1);
@@ -161,6 +167,64 @@ class CrewControllerSystemTest {
 		WebElement crewName = browser.findElementById("crewliCrewName");
 		String [] cleanName = crewName.getText().split("crew name:");
 		assertEquals(cleanName[1], "crew1");
+	}
+
+	@Test
+	@DisplayName("Test user buying a product")
+	void testCommerce() {
+		browser.get(baseUrl + "/login");
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("login")));
+		WebElement loginBtn = browser.findElementById("login");
+		loginBtn.click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("navibtnCommerce")));
+		WebElement commerceBtn = browser.findElementById("navibtnCommerce");
+		commerceBtn.click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("combtnBuy0")));
+		WebElement buyBtn = browser.findElementById("combtnBuy0");
+		buyBtn.click();
+		String alertMsg = browser.switchTo().alert().getText();
+		assertEquals("Your transaction was successful!", alertMsg);	
+	}
+
+	@Test
+	@DisplayName("Test user not having right credentials to buy a product")
+	void testCommerceError() {
+		Player player_aux = playerRepository.findById(this.pl1.getId()).orElseThrow();
+		player_aux.setPlayer_role(Role.ROLE_PILOT);
+		playerRepository.save(player_aux);
+		browser.get(baseUrl + "/login");
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("login")));
+		WebElement loginBtn = browser.findElementById("login");
+		loginBtn.click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("navibtnCommerce")));
+		WebElement commerceBtn = browser.findElementById("navibtnCommerce");
+		commerceBtn.click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("combtnBuy0")));
+		WebElement buyBtn = browser.findElementById("combtnBuy0");
+		buyBtn.click();
+		String alertMsg = browser.switchTo().alert().getText();
+		assertEquals("You dont have the credentials to do this action!", alertMsg);	
+	}
+
+	@Test
+	@DisplayName("Test user not having money to buy a product")
+	void testCommerceError2() {
+		Player player_aux = playerRepository.findById(this.pl1.getId()).orElseThrow();
+		player_aux.getCrewmembers().setCredits(0);
+		playerRepository.save(player_aux);
+		crewmembersRepository.save(player_aux.getCrewmembers());
+		browser.get(baseUrl + "/login");
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.id("login")));
+		WebElement loginBtn = browser.findElementById("login");
+		loginBtn.click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("navibtnCommerce")));
+		WebElement commerceBtn = browser.findElementById("navibtnCommerce");
+		commerceBtn.click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("combtnBuy0")));
+		WebElement buyBtn = browser.findElementById("combtnBuy0");
+		buyBtn.click();
+		String alertMsg = browser.switchTo().alert().getText();
+		assertEquals("Error!!", alertMsg);	
 	}
 
 	@Test
